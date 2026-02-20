@@ -173,7 +173,7 @@ export function createNewSortInstance(
 ):<T>(arrayToSort:readonly T[])=>IFastSort<T>
 export function createNewSortInstance(opts:ISortInstanceOptions):<T>(arrayToSort:T[])=>IFastSort<T>
 export function createNewSortInstance(opts:ISortInstanceOptions):<T>(arrayToSort:T[])=>IFastSort<T> { // eslint-disable-line max-len
-  const comparer = castComparer(opts.comparer);
+  const comparer = castComparer(opts.comparer?.call());
 
   return function<T>(arrayToSort:T[]):IFastSort<T> {
     const ctx = Array.isArray(arrayToSort) && !opts.inPlaceSorting

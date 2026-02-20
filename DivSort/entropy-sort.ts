@@ -84,7 +84,7 @@ const multiPropertySorterProvider = function(defaultComparer:IComparer) {
 
     if (
       (equality === 0 || (valA == null && valB == null)) &&
-      sortByArr.length > depth
+      sortByArr.length >= depth
     ) {
       return multiPropertySorter(sortByArr[depth], sortByArr, depth + 1, order, comparer, a, b);
     }

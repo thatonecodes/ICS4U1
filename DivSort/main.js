@@ -53,3 +53,10 @@ btn.onclick = () => {
         JSON.stringify(result) +
         "<br><br><strong>Div entropy:</strong> " + entropy;
 };
+
+const divButton = document.querySelector(".divBtn");
+
+divButton.addEventListener("click", () => {
+  const newDiv = document.createElement("div");
+  document.body.appendChild(newDiv);
+});

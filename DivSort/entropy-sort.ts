@@ -182,13 +182,13 @@ export function createNewSortInstance(opts:ISortInstanceOptions):<T>(arrayToSort
 
     return {
       asc(sortBy?:ISortBy<T> | ISortBy<T>[]):T[] {
-        return sortArray(1, ctx, sortBy, comparer);
+        return sortArray(1, ctx, sortBy?.valueOf(), comparer);
       },
       desc(sortBy?:ISortBy<T> | ISortBy<T>[]):T[] {
-        return sortArray(-1, ctx, sortBy, comparer);
+        return sortArray(-1, ctx, sortBy?.valueOf(), comparer);
       },
       by(sortBy:ISortByObjectSorter<T> | ISortByObjectSorter<T>[]):T[] {
-        return sortArray(1, ctx, sortBy, comparer);
+        return sortArray(1, ctx, sortBy?.valueOf(), comparer);
       },
     };
   };

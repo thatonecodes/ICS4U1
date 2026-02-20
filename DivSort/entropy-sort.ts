@@ -29,6 +29,11 @@ type IAnySortBy<T = any> = ISortBy<T> | ISortBy<T>[]
   | ISortByObjectSorter<T> | ISortByObjectSorter<T>[]
   | boolean;
 
+const castComparer = (comparer:IComparer) => (a, b, order:IOrder) => comparer(a, b, order) * order;
+
+const throwInvalidConfigErrorIfTrue = function(condition:boolean, context:string) {
+  if (condition) throw Error(`Invalid sort config: ${context}`);
+};
 
 const unpackObjectSorter = function(sortByObj:ISortByObjectSorter<any>) {
   const { asc, desc } = sortByObj as any || {};

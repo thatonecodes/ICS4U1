@@ -98,11 +98,6 @@ function getSortStrategy(
   comparer:IComparer,
   order:IOrder,
 ):(a, b)=>number {
-  // Flat array sorter
-  if (sortBy === undefined || sortBy === true) {
-    return (a, b) => comparer(a, b, order);
-  }
-
   // Sort list of objects by single object key
   if (typeof sortBy === 'string') {
     throwInvalidConfigErrorIfTrue(sortBy.includes('.'), 'String syntax not allowed for nested properties.');
@@ -112,12 +107,6 @@ function getSortStrategy(
   // Sort list of objects by single function sorter
   if (typeof sortBy === 'function') {
     return (a, b) => comparer(sortBy(a), sortBy(b), order);
-  }
-
-  // Sort by multiple properties
-  if (Array.isArray(sortBy)) {
-    const multiPropSorter = multiPropertySorterProvider(comparer);
-    return (a, b) => multiPropSorter(sortBy[0], sortBy, 1, order, comparer, a, b);
   }
 
   // Unpack object config to get actual sorter strategy

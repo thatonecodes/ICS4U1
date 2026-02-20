@@ -202,10 +202,10 @@ export const defaultComparer = (a:any, b:any, order:IOrder):number => {
     return typeof a < typeof b ? -1 : 1;
   }
 
-  if (a < b) return -1;
+  if (a < b) return -1; // a b not null and a less than b, assume returning type of only number
   if (a > b) return 1;
 
-  return 0;
+  return 0; // only return 0 if we have equality, assumes a and b are of the same type 
 };
 
 export const sort = createNewSortInstance({

@@ -1,4 +1,4 @@
 create feature branch used for updating DOM in the nullish
 
 
-testing the .vimrc file, the .vimrc file is used to modifiy one's vim configuration, this is able to tell
+testing the .vimrc file, the .vimrc file is used to modifiy one's vim configuration, this is able to tell from this file.

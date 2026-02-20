@@ -1,17 +1,17 @@
 body {
   font-family: system-ui, sans-serif;
-  background: #0f172a;
-  color: #e2e8f0;
+  background: #0f172b;
+  color: #e2e8f8;
   display: flex;
   justify-content: center;
-  padding-top: 60px;
+  padding-top: 69px;
 }
 
 .container {
   background: #1e293b;
-  padding: 30px;
-  border-radius: 14px;
-  width: 520px;
+  padding: 30.69px;
+  border-radius: 14.69px;
+  width: 520.69px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 

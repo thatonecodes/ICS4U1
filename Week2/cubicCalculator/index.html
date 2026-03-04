@@ -6,6 +6,7 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ICS4U1 - Cubic Calculator Assignment</title>
+    <link rel="stylesheet" href="src/style.css">
 </head>
 
 <body>
@@ -16,47 +17,80 @@
                 <div class="card">
                     <div class="basic-card basic-card-aqua">
                         <div class="card-content">
-                            <span class="card-title">
-                                <label for="a">Enter a value:</label>
-                            </span>
-                            <input id="a" type="number">
+                            <div class="inner-container">
+                                <span class="card-title">
+                                    <label for="a">Enter a value:</label>
+                                </span>
+                                <input id="a" type="number">
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="card">
                     <div class="basic-card basic-card-aqua">
                         <div class="card-content">
-                            <span class="card-title">
-                                <label for="b">Enter b value:</label>
-                            </span>
-                            <input id="b" type="number">
+                            <div class="inner-container">
+                                <span class="card-title">
+                                    <label for="b">Enter b value:</label>
+                                </span>
+                                <input id="b" type="number">
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="card">
                     <div class="basic-card basic-card-aqua">
                         <div class="card-content">
-                            <span class="card-title">
-                                <label for="c">Enter c value:</label>
-                            </span>
-                            <input id="c" type="number">
+                            <div class="inner-cotainer">
+                                <span class="card-title">
+                                    <label for="c">Enter c value:</label>
+                                </span>
+                                <input id="c" type="number">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="basic-card basic-card-aqua">
-                    <div class="card-content">
-                        <span class="card-title">
-                            <label for="d">Enter d value:</label>
-                        </span>
-                        <input id="d" type="number">
-                    </div>
-                </div>
+
                 <div class="card">
-                    <label for="result">Result:</label>
-                    <input id="result" type="number">
+                    <div class="basic-card basic-card-aqua">
+                        <div class="card-content">
+                            <div class="inner-container">
+                                <span class="card-title">
+                                    <label for="d">Enter d value:</label>
+                                </span>
+                                <input id="d" type="number">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
+        <div class="main-content">
+            <section class="table-section">
+                <h2>Results Table</h2>
+                <table id="resultsTable" border="1" style="width: 100%; text-align: center; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>Root</th>
+                            <th>x</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="2">Results will be displayed here</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="results-section">
+                <h2>Equation and Graph</h2>
+                <p id="equation">Equation: ax³ + bx² + cx + d</p>
+                <div id="graph" style="width: 100%; height: 300px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                    <p>Graph will be displayed here</p>
+                </div>
+            </section>
+        </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
 </body>

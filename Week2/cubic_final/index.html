@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cubic Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+  <div class="noise"></div>
+
+  <div class="app">
+    <header class="header">
+      <div class="header-eyebrow">ICS4U1 — Assignment 2</div>
+      <h1 class="header-title">Cubic<br>Calculator</h1>
+      <p class="header-sub">ax³ + bx² + cx + d = 0</p>
+    </header>
+
+    <main class="main">
+      <section class="input-section">
+        <div class="inputs-grid">
+          <div class="coeff-input">
+            <label for="a">
+              <span class="coeff-letter">a</span>
+              <span class="coeff-power">x³</span>
+            </label>
+            <input id="a" type="number" value="1" step="any" placeholder="0" />
+          </div>
+          <div class="coeff-input">
+            <label for="b">
+              <span class="coeff-letter">b</span>
+              <span class="coeff-power">x²</span>
+            </label>
+            <input id="b" type="number" value="-6" step="any" placeholder="0" />
+          </div>
+          <div class="coeff-input">
+            <label for="c">
+              <span class="coeff-letter">c</span>
+              <span class="coeff-power">x</span>
+            </label>
+            <input id="c" type="number" value="11" step="any" placeholder="0" />
+          </div>
+          <div class="coeff-input">
+            <label for="d">
+              <span class="coeff-letter">d</span>
+              <span class="coeff-power">const</span>
+            </label>
+            <input id="d" type="number" value="-6" step="any" placeholder="0" />
+          </div>
+        </div>
+
+        <div class="equation-preview">
+          <span id="equationPreview" class="eq-text">f(x) = x³ − 6x² + 11x − 6</span>
+        </div>
+
+        <button id="solveBtn" class="solve-btn">
+          <span class="solve-btn-text">Solve Cubic</span>
+          <span class="solve-btn-arrow">→</span>
+        </button>
+      </section>
+
+      <section class="results-section" id="resultsSection">
+        <div class="results-grid">
+          <div class="results-panel roots-panel">
+            <h2 class="panel-title">Roots</h2>
+            <table class="roots-table" id="rootsTable">
+              <thead>
+                <tr>
+                  <th>Root</th>
+                  <th>Value</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody id="rootsBody">
+                <tr class="placeholder-row">
+                  <td colspan="3">Press "Solve Cubic" to compute roots</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="discriminant-info" id="discriminantInfo"></div>
+          </div>
+
+          <div class="results-panel graph-panel">
+            <h2 class="panel-title">Graph</h2>
+            <div class="canvas-wrapper">
+              <canvas id="graph" width="600" height="400"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

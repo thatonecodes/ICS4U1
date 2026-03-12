@@ -1,7 +1,5 @@
 import "./style.css";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 interface Root {
   real: number;
   imag: number;
@@ -88,8 +86,6 @@ function solveCubic(a: number, b: number, c: number, d: number): CubicResult {
   }
 }
 
-// ─── Equation Preview ─────────────────────────────────────────────────────────
-
 function buildEquation(a: number, b: number, c: number, d: number): string {
   if (a === 0) return "a cannot be 0";
   let eq = "f(x) = ";
@@ -106,8 +102,6 @@ function buildEquation(a: number, b: number, c: number, d: number): string {
   if (d !== 0) eq += (d < 0 ? " − " : " + ") + Math.abs(d);
   return eq;
 }
-
-// ─── Graph ────────────────────────────────────────────────────────────────────
 
 function drawGraph(
   canvas: HTMLCanvasElement,
@@ -129,7 +123,7 @@ function drawGraph(
   const yCenter = H / 2;
   const scale = 30;
 
-  // Grid
+  // this is the start of the grid
   ctx.beginPath();
   ctx.strokeStyle = "#1c2030";
   ctx.lineWidth = 1;
@@ -143,7 +137,7 @@ function drawGraph(
   }
   ctx.stroke();
 
-  // Axes
+  // add the axes
   ctx.beginPath();
   ctx.strokeStyle = "#3a3f50";
   ctx.lineWidth = 1;
@@ -153,7 +147,6 @@ function drawGraph(
   ctx.lineTo(W, yCenter);
   ctx.stroke();
 
-  // Curve
   const xStart = -W / 2 / scale;
   const xEnd = W / 2 / scale;
 
@@ -176,7 +169,7 @@ function drawGraph(
   ctx.stroke();
   ctx.restore();
 
-  // Root markers
+  // root markers (x1, x2, x3)
   roots.forEach((root, idx) => {
     if (root.isComplex) return;
     const cx = xCenter + root.real * scale;
@@ -206,8 +199,6 @@ function drawGraph(
     );
   });
 }
-
-// ─── DOM Helpers ──────────────────────────────────────────────────────────────
 
 function renderRoots(result: CubicResult): void {
   const tbody = document.getElementById("rootsBody")!;
@@ -259,8 +250,6 @@ function renderRoots(result: CubicResult): void {
   `;
   infoEl.classList.add("visible");
 }
-
-// ─── Main Logic ───────────────────────────────────────────────────────────────
 
 function getInputs(): { a: number; b: number; c: number; d: number } | null {
   const get = (id: string) =>

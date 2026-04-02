@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────
+   CSS VARIABLES — Dark Theme
+───────────────────────────────────────── */
+:root {
+  --bg:        #0b0c10;
+  --surface:   #111318;
+  --surface2:  #181b22;
+  --canvas-bg: #0d0f14;
+  --border:    #252830;
+  --border2:   #2e333f;
+  --accent:    #c8ff00;   /* lime */
+  --accent2:   #00d4ff;   /* cyan */
+  --accent3:   #ff6b35;   /* orange */
+  --text:      #e8eaf0;
+  --text-muted:#6b7280;
+  --text-dim:  #9ca3af;
+  --radius:    12px;
+  --mono:      'Space Mono', monospace;
+  --sans:      'DM Sans', system-ui, sans-serif;
+}
+
+/* ─────────────────────────────────────────
+   BASE RESET
+───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─────────────────────────────────────────
+   LAYOUT
+───────────────────────────────────────── */
+.app-bg       { background: var(--bg); min-height: 100vh; }
+.app-container{ max-width: 1060px; margin: 0 auto; padding: 36px 20px 72px; }
+.main-layout  { display: flex; flex-direction: column; gap: 18px; }
+
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 16px;
+}
+
+/* ─────────────────────────────────────────
+   HEADER
+───────────────────────────────────────── */
+.app-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 32px;
+  margin-bottom: 40px;
+}
+
+.header-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.9;
+}
+
+.header-title {
+  font-family: var(--mono);
+  font-size: clamp(48px, 7vw, 80px);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-top: 8px;
+}
+
+.header-sub {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 12px;
+  letter-spacing: 0.05em;
+}
+
+/* ─────────────────────────────────────────
+   CARD
+───────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.panel-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+/* ─────────────────────────────────────────
+   COEFFICIENT INPUTS
+───────────────────────────────────────── */
+.coeff-card {
+  background: var(--canvas-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.2s;
+}
+.coeff-card:focus-within { border-color: var(--border2); }
+
+.coeff-letter {
+  font-family: var(--mono);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.coeff-power {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.coeff-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 18px;
+  padding: 4px 0;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+  -moz-appearance: textfield;
+}
+.coeff-input::-webkit-inner-spin-button,
+.coeff-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+.coeff-input:focus { border-bottom-color: var(--accent); }
+.coeff-input::placeholder { color: var(--text-muted); }
+
+/* ─────────────────────────────────────────
+   EQUATION PREVIEW
+───────────────────────────────────────── */
+.eq-preview {
+  background: var(--canvas-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  text-align: center;
+}
+
+.eq-text {
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--accent2);
+  letter-spacing: 0.04em;
+}
+
+/* ─────────────────────────────────────────
+   SAVE BUTTON
+───────────────────────────────────────── */
+.save-btn {
+  margin-top: 14px;
+  width: 100%;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: var(--radius);
+  padding: 15px 32px;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  overflow: hidden;
+}
+.save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 28px rgba(200, 255, 0, 0.2);
+}
+.save-btn:active { transform: translateY(0); }
+.save-btn-arrow { font-size: 18px; transition: transform 0.2s; }
+.save-btn:hover .save-btn-arrow { transform: translateX(4px); }
+
+/* ─────────────────────────────────────────
+   DATA TABLE
+───────────────────────────────────────── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 7px 10px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table td {
+  padding: 10px;
+  border-bottom: 1px solid #1a1e26;
+  color: var(--text-dim);
+  vertical-align: middle;
+}
+
+.data-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+
+/* ─────────────────────────────────────────
+   TEXT UTILITIES
+───────────────────────────────────────── */
+.text-primary { color: var(--text); }
+.text-accent2 { color: var(--accent2); }
+.text-accent3 { color: var(--accent3); }
+.root-index   { color: var(--accent); font-weight: 700; }
+.placeholder-text {
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* ─────────────────────────────────────────
+   BADGES
+───────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: var(--mono);
+}
+.badge-real    { background: rgba(200,255,0,0.1);  color: var(--accent);  border: 1px solid rgba(200,255,0,0.2); }
+.badge-complex { background: rgba(255,107,53,0.1); color: var(--accent3); border: 1px solid rgba(255,107,53,0.2); }
+.badge-double  { background: rgba(0,212,255,0.1);  color: var(--accent2); border: 1px solid rgba(0,212,255,0.2); }
+.badge-max     { background: rgba(255,107,53,0.1); color: var(--accent3); border: 1px solid rgba(255,107,53,0.2); }
+.badge-min     { background: rgba(0,212,255,0.1);  color: var(--accent2); border: 1px solid rgba(0,212,255,0.2); }
+
+/* ─────────────────────────────────────────
+   DISCRIMINANT INFO BOX
+───────────────────────────────────────── */
+.disc-info {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: var(--canvas-bg);
+  border-radius: 8px;
+  border-left: 2px solid var(--border2);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.9;
+}
+.disc-label { color: var(--text-dim); }
+
+/* ─────────────────────────────────────────
+   GRAPH CANVAS WRAPPER
+───────────────────────────────────────── */
+.canvas-wrapper {
+  background: var(--canvas-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* ─────────────────────────────────────────
+   HISTORY TABLE ROWS
+───────────────────────────────────────── */
+.history-row {
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+}
+.history-row:hover    { background: rgba(200,255,0,0.02); }
+.history-row-active   {
+  background: rgba(200,255,0,0.04) !important;
+  border-left-color: var(--accent) !important;
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 700px) {
+  .results-grid { grid-template-columns: 1fr; }
+  .grid-cols-4  { grid-template-columns: repeat(2, 1fr) !important; }
+}

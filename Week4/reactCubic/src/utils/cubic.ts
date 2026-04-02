@@ -109,14 +109,14 @@ export function drawGraph(
   const ctx = canvas.getContext('2d')!;
   const W = canvas.width, H = canvas.height;
   ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = '#0d0f14';
+  ctx.fillStyle = '#0a0e18';
   ctx.fillRect(0, 0, W, H);
 
   const xC = W / 2, yC = H / 2, scale = 28;
 
   // Grid lines
   ctx.beginPath();
-  ctx.strokeStyle = '#1c2030';
+  ctx.strokeStyle = '#111826';
   ctx.lineWidth = 1;
   for (let x = 0; x <= W; x += scale) { ctx.moveTo(x, 0); ctx.lineTo(x, H); }
   for (let y = 0; y <= H; y += scale) { ctx.moveTo(0, y); ctx.lineTo(W, y); }
@@ -124,26 +124,26 @@ export function drawGraph(
 
   // Axes
   ctx.beginPath();
-  ctx.strokeStyle = '#3a3f50';
+  ctx.strokeStyle = '#223050';
   ctx.lineWidth = 1.5;
   ctx.moveTo(xC, 0); ctx.lineTo(xC, H);
   ctx.moveTo(0, yC); ctx.lineTo(W, yC);
   ctx.stroke();
 
   // Axis tick labels
-  ctx.fillStyle = '#3a4055';
+  ctx.fillStyle = '#1e3a5f';
   ctx.font = '9px monospace';
   ctx.textAlign = 'center';
   for (let i = -Math.floor(xC / scale); i <= Math.floor(xC / scale); i++) {
     if (i !== 0) ctx.fillText(String(i), xC + i * scale, yC + 12);
   }
 
-  // Cubic curve
+  // Cubic curve — electric blue
   const xStart = -xC / scale, xEnd = xC / scale;
   ctx.save();
   ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.clip();
   ctx.beginPath();
-  ctx.strokeStyle = '#c8ff00';
+  ctx.strokeStyle = '#00aaff';
   ctx.lineWidth = 2.5;
   let isFirst = true;
   for (let x = xStart; x <= xEnd; x += 0.02) {
@@ -159,9 +159,9 @@ export function drawGraph(
   roots.forEach((root, idx) => {
     if (root.isComplex) return;
     const cx = xC + root.real * scale, cy = yC;
-    const color = root.isDouble ? '#00d4ff' : '#c8ff00';
+    const color = root.isDouble ? '#60cfff' : '#00aaff';
     ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-    ctx.fillStyle = '#0d0f14'; ctx.fill();
+    ctx.fillStyle = '#0a0e18'; ctx.fill();
     ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
     ctx.beginPath(); ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
     ctx.fillStyle = color; ctx.fill();
@@ -172,7 +172,7 @@ export function drawGraph(
   // Critical point markers (BONUS)
   criticalPoints.forEach((pt) => {
     const cx = xC + pt.x * scale, cy = yC - pt.y * scale;
-    const color = pt.type === 'max' ? '#ff6b35' : '#00d4ff';
+    const color = pt.type === 'max' ? '#ff6b35' : '#60cfff';
     ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2);
     ctx.fillStyle = color; ctx.fill();
     ctx.font = 'bold 9px monospace'; ctx.fillStyle = color; ctx.textAlign = 'center';

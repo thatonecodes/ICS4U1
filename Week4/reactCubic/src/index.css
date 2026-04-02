@@ -5,17 +5,17 @@
 @tailwind utilities;
 
 /* ─────────────────────────────────────────
-   CSS VARIABLES — Dark Theme
+   CSS VARIABLES — Blue Dark Theme
 ───────────────────────────────────────── */
 :root {
-  --bg:        #0b0c10;
-  --surface:   #111318;
-  --surface2:  #181b22;
-  --canvas-bg: #0d0f14;
-  --border:    #252830;
-  --border2:   #2e333f;
-  --accent:    #c8ff00;   /* lime */
-  --accent2:   #00d4ff;   /* cyan */
+  --bg:        #080c14;
+  --surface:   #0d1220;
+  --surface2:  #111826;
+  --canvas-bg: #0a0e18;
+  --border:    #1a2235;
+  --border2:   #223050;
+  --accent:    #00aaff;   /* electric blue */
+  --accent2:   #60cfff;   /* sky blue */
   --accent3:   #ff6b35;   /* orange */
   --text:      #e8eaf0;
   --text-muted:#6b7280;
@@ -56,6 +56,7 @@ body {
    HEADER
 ───────────────────────────────────────── */
 .app-header {
+  position: relative;
   border-bottom: 1px solid var(--border);
   padding-bottom: 32px;
   margin-bottom: 40px;
@@ -87,6 +88,31 @@ body {
   color: var(--text-muted);
   margin-top: 12px;
   letter-spacing: 0.05em;
+}
+
+/* ─────────────────────────────────────────
+   REACT SPINNING LOGO
+───────────────────────────────────────── */
+.react-logo-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.react-logo {
+  width: 80px;
+  height: 80px;
+  animation: react-spin 10s linear infinite;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 12px rgba(0, 170, 255, 0.5));
+}
+
+@keyframes react-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 /* ─────────────────────────────────────────
@@ -200,7 +226,7 @@ body {
 }
 .save-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 0 28px rgba(200, 255, 0, 0.2);
+  box-shadow: 0 0 28px rgba(0, 170, 255, 0.35);
 }
 .save-btn:active { transform: translateY(0); }
 .save-btn-arrow { font-size: 18px; transition: transform 0.2s; }
@@ -228,7 +254,7 @@ body {
 
 .data-table td {
   padding: 10px;
-  border-bottom: 1px solid #1a1e26;
+  border-bottom: 1px solid #111826;
   color: var(--text-dim);
   vertical-align: middle;
 }
@@ -262,11 +288,11 @@ body {
   text-transform: uppercase;
   font-family: var(--mono);
 }
-.badge-real    { background: rgba(200,255,0,0.1);  color: var(--accent);  border: 1px solid rgba(200,255,0,0.2); }
+.badge-real    { background: rgba(0,170,255,0.1);  color: var(--accent);  border: 1px solid rgba(0,170,255,0.25); }
 .badge-complex { background: rgba(255,107,53,0.1); color: var(--accent3); border: 1px solid rgba(255,107,53,0.2); }
-.badge-double  { background: rgba(0,212,255,0.1);  color: var(--accent2); border: 1px solid rgba(0,212,255,0.2); }
+.badge-double  { background: rgba(96,207,255,0.1); color: var(--accent2); border: 1px solid rgba(96,207,255,0.25); }
 .badge-max     { background: rgba(255,107,53,0.1); color: var(--accent3); border: 1px solid rgba(255,107,53,0.2); }
-.badge-min     { background: rgba(0,212,255,0.1);  color: var(--accent2); border: 1px solid rgba(0,212,255,0.2); }
+.badge-min     { background: rgba(96,207,255,0.1); color: var(--accent2); border: 1px solid rgba(96,207,255,0.25); }
 
 /* ─────────────────────────────────────────
    DISCRIMINANT INFO BOX
@@ -302,9 +328,9 @@ body {
   border-left: 2px solid transparent;
   transition: all 0.15s;
 }
-.history-row:hover    { background: rgba(200,255,0,0.02); }
+.history-row:hover    { background: rgba(0,170,255,0.03); }
 .history-row-active   {
-  background: rgba(200,255,0,0.04) !important;
+  background: rgba(0,170,255,0.06) !important;
   border-left-color: var(--accent) !important;
 }
 
@@ -314,4 +340,5 @@ body {
 @media (max-width: 700px) {
   .results-grid { grid-template-columns: 1fr; }
   .grid-cols-4  { grid-template-columns: repeat(2, 1fr) !important; }
+  .react-logo   { width: 52px; height: 52px; }
 }

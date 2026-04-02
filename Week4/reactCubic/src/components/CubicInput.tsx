@@ -20,7 +20,7 @@ export default function CubicInput({ coefficients, onChange, onSave }: Props) {
   };
 
   return (
-    <div className="grid grid-cols-4 gap-3">
+    <div className="flex gap-3" style={{display: "flex"}}>
       {FIELDS.map(({ key, label, power }) => (
         <div
           key={key}

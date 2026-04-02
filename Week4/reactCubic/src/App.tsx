@@ -9,6 +9,26 @@ import CubicHistory from './components/CubicHistory';
 
 const DEFAULT_COEFFICIENTS: Coefficients = { a: 1, b: -6, c: 11, d: -6 };
 
+function ReactLogo() {
+  return (
+    <div className="react-logo-container">
+      <svg
+        className="react-logo"
+        viewBox="-11.5 -10.23174 23 20.46348"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <circle cx="0" cy="0" r="2.05" fill="#00aaff" />
+        <g stroke="#00aaff" strokeWidth="1" fill="none">
+          <ellipse rx="11" ry="4.2" />
+          <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+          <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export default function App() {
   const [coefficients, setCoefficients] = useState<Coefficients>(DEFAULT_COEFFICIENTS);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -47,6 +67,7 @@ export default function App() {
 
         {/* ── Header ── */}
         <header className="app-header">
+          <ReactLogo />
           <div className="header-eyebrow">ICS4U1 — Assignment 3</div>
           <h1 className="header-title">
             Cubic<br />Calculator

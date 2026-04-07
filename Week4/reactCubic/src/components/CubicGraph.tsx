@@ -2,13 +2,13 @@ import { useRef, useEffect } from 'react';
 import type { Coefficients, CubicResult, CriticalPoint } from '../types';
 import { drawGraph } from '../utils/cubic';
 
-interface Props {
+interface GraphProps {
   coefficients: Coefficients;
   result: CubicResult | null;
   criticalPoints: CriticalPoint[];
 }
 
-export default function CubicGraph({ coefficients, result, criticalPoints }: Props) {
+export default function CubicGraph({ coefficients, result, criticalPoints }: GraphProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -33,9 +33,11 @@ export default function CubicGraph({ coefficients, result, criticalPoints }: Pro
   }, [coefficients, result, criticalPoints]);
 
   return (
-    <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-      <p className="panel-title">Graph</p>
-      <div className="canvas-wrapper">
+    <div className="bg-[#0d1220] border border-[#1a2235] rounded-xl p-6 flex flex-col">
+      <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#6b7280] mb-4">
+        Graph
+      </p>
+      <div className="bg-[#0a0e18] rounded-lg overflow-hidden flex-1">
         <canvas
           ref={canvasRef}
           width={560}

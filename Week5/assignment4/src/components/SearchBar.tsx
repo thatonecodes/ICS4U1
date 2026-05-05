@@ -1,6 +1,7 @@
-import { useState, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FaSearch, FaFilm, FaTv, FaUser } from 'react-icons/fa';
+import { useDebounce } from '../hooks/useDebounce';
 
 type SearchType = 'multi' | 'movie' | 'tv' | 'person';
 
@@ -12,17 +13,29 @@ const searchOptions: { value: SearchType; label: string; icon: React.ReactNode }
 ];
 
 export default function SearchBar() {
-  const [query, setQuery] = useState('');
-  const [searchType, setSearchType] = useState<SearchType>('multi');
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') || '');
+  const [searchType, setSearchType] = useState<SearchType>((searchParams.get('type') as SearchType) || 'multi');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const debouncedQuery = useDebounce(query, 500);
+  const isFirstRender = useRef(true);
 
-  const handleSubmit = (e: FormEvent) => {
+  // Auto-search when debounced query changes
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (debouncedQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(debouncedQuery.trim())}&type=${searchType}`);
+    }
+  }, [debouncedQuery, searchType]);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
       navigate(`/search?q=${encodeURIComponent(query.trim())}&type=${searchType}`);
-      setQuery('');
-      setDropdownOpen(false);
     }
   };
 
@@ -31,7 +44,6 @@ export default function SearchBar() {
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-2">
       <div className="relative flex items-center">
-        {/* Dropdown */}
         <div className="relative">
           <button
             type="button"
@@ -69,7 +81,6 @@ export default function SearchBar() {
           )}
         </div>
 
-        {/* Input */}
         <div className="relative">
           <input
             type="text"
@@ -81,7 +92,6 @@ export default function SearchBar() {
           <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
         </div>
 
-        {/* Submit button */}
         <button
           type="submit"
           className="px-4 py-2 bg-tmdb-light text-white rounded-r-full hover:bg-blue-600 transition font-medium h-[42px]"

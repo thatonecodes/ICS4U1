@@ -72,7 +72,6 @@ export default function SearchView() {
       </h1>
       {query && <p className="text-gray-400 mb-4">Results for &quot;{query}&quot;</p>}
 
-      {/* Type filter tabs */}
       <div className="flex gap-2 mb-6">
         {(['multi', 'movie', 'tv', 'person'] as const).map((t) => (
           <button
@@ -99,7 +98,7 @@ export default function SearchView() {
       {!query && (
         <div className="text-center py-20">
           <FaSearch className="text-6xl text-gray-700 mx-auto mb-4" />
-          <p className="text-xl text-gray-400">Enter a search term to find movies, TV shows, and people.</p>
+          <p className="text-xl text-gray-400">Start typing to search movies, TV shows, and people.</p>
         </div>
       )}
 

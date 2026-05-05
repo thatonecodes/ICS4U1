@@ -1,4 +1,4 @@
-import { useParams, useLocation, Link } from 'react-router-dom';
+import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
 import { FaUsers, FaArrowLeft } from 'react-icons/fa';
 import { useFetch } from '../hooks/useTMDB';
 import { getCredits, getImageUrl } from '../services/tmdbApi';
@@ -10,6 +10,7 @@ export default function CreditsView() {
   const location = useLocation();
   const mediaType = location.pathname.startsWith('/tv') ? 'tv' : 'movie';
   const numericId = Number(id);
+  const navigate = useNavigate();
 
   const { data, loading, error, refetch } = useFetch(
     () => getCredits(mediaType, numericId),
@@ -22,12 +23,12 @@ export default function CreditsView() {
 
   return (
     <div>
-      <Link
-        to={`/${mediaType}/${numericId}`}
+      <button
+        onClick={() => navigate(-1)}
         className="inline-flex items-center gap-2 text-tmdb-light hover:underline mb-6"
       >
-        <FaArrowLeft /> Back to Details
-      </Link>
+        <FaArrowLeft /> Back
+      </button>
       <h1 className="text-3xl font-bold mb-8 flex items-center gap-3">
         <FaUsers className="text-tmdb-light" /> Cast & Crew
       </h1>

@@ -8,11 +8,11 @@ import ErrorMessage from '../components/ErrorMessage';
 export default function MovieView() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
-  const mediaType = location.pathname.startsWith('/tv') ? 'tv' : 'movie';
+  const mediaType = location.pathname.startsWith('/tv') ? 'tv' : 'movies';
   const numericId = Number(id);
 
   const { data, loading, error, refetch } = useFetch(
-    () => (mediaType === 'movie' ? getMovieDetails(numericId) : getTVDetails(numericId)),
+    () => (mediaType === 'movies' ? getMovieDetails(numericId) : getTVDetails(numericId)),
     [numericId, mediaType]
   );
 

@@ -1,18 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { FaSearch, FaFilm, FaTv, FaUser } from 'react-icons/fa';
-import { searchMulti } from '../services/tmdbApi';
+import { searchMulti, searchMovies, searchTV, searchPeople } from '../services/tmdbApi';
 import { getImageUrl } from '../services/tmdbApi';
 import Loading from '../components/Loading';
 import ErrorMessage from '../components/ErrorMessage';
 import type { Movie, TVShow, Person } from '../types';
 
 export default function SearchView() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
+  const type = (searchParams.get('type') as 'multi' | 'movie' | 'tv' | 'person') || 'multi';
   const [results, setResults] = useState<(Movie | TVShow | Person)[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const typeLabels = {
+    multi: 'All',
+    movie: 'Movies',
+    tv: 'TV Shows',
+    person: 'People',
+  };
 
   useEffect(() => {
     if (!query) {
@@ -21,24 +29,65 @@ export default function SearchView() {
     }
     setLoading(true);
     setError(null);
-    searchMulti(query)
+
+    let searchFn;
+    switch (type) {
+      case 'movie':
+        searchFn = searchMovies;
+        break;
+      case 'tv':
+        searchFn = searchTV;
+        break;
+      case 'person':
+        searchFn = searchPeople;
+        break;
+      default:
+        searchFn = searchMulti;
+    }
+
+    searchFn(query)
       .then((data) => {
-        setResults(data.results.filter((item) => item.media_type !== 'collection'));
+        const filtered = type === 'multi'
+          ? data.results.filter((item: any) => item.media_type !== 'collection')
+          : data.results;
+        setResults(filtered);
         setLoading(false);
       })
       .catch((err) => {
         setError(err.message || 'Search failed');
         setLoading(false);
       });
-  }, [query]);
+  }, [query, type]);
+
+  const handleTypeChange = (newType: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('type', newType);
+    setSearchParams(params);
+  };
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
+      <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
         <FaSearch className="text-tmdb-light" /> Search Results
       </h1>
+      {query && <p className="text-gray-400 mb-4">Results for &quot;{query}&quot;</p>}
 
-      {query && <p className="text-gray-400 mb-6">Results for &quot;{query}&quot;</p>}
+      {/* Type filter tabs */}
+      <div className="flex gap-2 mb-6">
+        {(['multi', 'movie', 'tv', 'person'] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => handleTypeChange(t)}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+              type === t
+                ? 'bg-tmdb-light text-white'
+                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+            }`}
+          >
+            {typeLabels[t]}
+          </button>
+        ))}
+      </div>
 
       {loading && <Loading />}
       {error && <ErrorMessage message={error} />}
@@ -56,79 +105,79 @@ export default function SearchView() {
 
       <div className="space-y-4">
         {results.map((item) => {
-          if (item.media_type === 'movie') {
-            const movie = item as Movie;
+          if ('title' in item || (type === 'movie' && 'release_date' in item)) {
+            const m = item as Movie;
             return (
               <Link
-                to={`/movies/${movie.id}`}
-                key={movie.id}
+                to={`/movies/${m.id}`}
+                key={`movie-${m.id}`}
                 className="flex gap-4 bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-750 transition group"
               >
                 <img
-                  src={getImageUrl(movie.poster_path, 'w200')}
-                  alt={movie.title}
+                  src={getImageUrl(m.poster_path, 'w200')}
+                  alt={m.title}
                   className="w-24 md:w-32 aspect-[2/3] object-cover"
                   loading="lazy"
                 />
                 <div className="p-4 flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <FaFilm className="text-tmdb-light" />
-                    <h3 className="text-lg font-bold group-hover:text-tmdb-light transition">{movie.title}</h3>
+                    <h3 className="text-lg font-bold group-hover:text-tmdb-light transition">{m.title}</h3>
                   </div>
                   <p className="text-sm text-gray-400 mb-2">
-                    {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}
+                    {m.release_date ? new Date(m.release_date).getFullYear() : 'N/A'}
                   </p>
-                  <p className="text-gray-300 text-sm line-clamp-2">{movie.overview}</p>
+                  <p className="text-gray-300 text-sm line-clamp-2">{m.overview}</p>
                 </div>
               </Link>
             );
           }
-          if (item.media_type === 'tv') {
-            const show = item as TVShow;
+          if ('name' in item && 'first_air_date' in item) {
+            const s = item as TVShow;
             return (
               <Link
-                to={`/tv/${show.id}`}
-                key={show.id}
+                to={`/tv/${s.id}`}
+                key={`tv-${s.id}`}
                 className="flex gap-4 bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-750 transition group"
               >
                 <img
-                  src={getImageUrl(show.poster_path, 'w200')}
-                  alt={show.name}
+                  src={getImageUrl(s.poster_path, 'w200')}
+                  alt={s.name}
                   className="w-24 md:w-32 aspect-[2/3] object-cover"
                   loading="lazy"
                 />
                 <div className="p-4 flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <FaTv className="text-tmdb-green" />
-                    <h3 className="text-lg font-bold group-hover:text-tmdb-light transition">{show.name}</h3>
+                    <h3 className="text-lg font-bold group-hover:text-tmdb-light transition">{s.name}</h3>
                   </div>
                   <p className="text-sm text-gray-400 mb-2">
-                    {show.first_air_date ? new Date(show.first_air_date).getFullYear() : 'N/A'}
+                    {s.first_air_date ? new Date(s.first_air_date).getFullYear() : 'N/A'}
                   </p>
-                  <p className="text-gray-300 text-sm line-clamp-2">{show.overview}</p>
+                  <p className="text-gray-300 text-sm line-clamp-2">{s.overview}</p>
                 </div>
               </Link>
             );
           }
-          const person = item as Person;
+          const p = item as Person;
           return (
             <Link
-              to={`/person/${person.id}`}
-              key={person.id}
+              to={`/person/${p.id}`}
+              key={`person-${p.id}`}
               className="flex gap-4 bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-750 transition group"
             >
               <img
-                src={getImageUrl(person.profile_path, 'w200')}
-                alt={person.name}
+                src={getImageUrl(p.profile_path, 'w200')}
+                alt={p.name}
                 className="w-24 md:w-32 aspect-[2/3] object-cover"
                 loading="lazy"
               />
               <div className="p-4 flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <FaUser className="text-gray-400" />
-                  <h3 className="text-lg font-bold group-hover:text-tmdb-light transition">{person.name}</h3>
+                  <h3 className="text-lg font-bold group-hover:text-tmdb-light transition">{p.name}</h3>
                 </div>
-                <p className="text-sm text-gray-400">{person.known_for_department}</p>
+                <p className="text-sm text-gray-400">{p.known_for_department}</p>
               </div>
             </Link>
           );

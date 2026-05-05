@@ -20,7 +20,6 @@ const api = axios.create({
   },
 });
 
-// Add api_key to every request as a query parameter
 api.interceptors.request.use((config) => {
   config.params = { ...config.params, api_key: API_KEY };
   return config;
@@ -87,3 +86,12 @@ export const getPersonImages = (id: number) =>
 
 export const searchMulti = (query: string, page: number = 1) =>
   api.get<ApiResponse<Movie | TVShow | Person>>(`/search/multi`, { params: { query, page } }).then(r => r.data);
+
+export const searchMovies = (query: string, page: number = 1) =>
+  api.get<ApiResponse<Movie>>(`/search/movie`, { params: { query, page } }).then(r => r.data);
+
+export const searchTV = (query: string, page: number = 1) =>
+  api.get<ApiResponse<TVShow>>(`/search/tv`, { params: { query, page } }).then(r => r.data);
+
+export const searchPeople = (query: string, page: number = 1) =>
+  api.get<ApiResponse<Person>>(`/search/person`, { params: { query, page } }).then(r => r.data);

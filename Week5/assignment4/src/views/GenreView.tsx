@@ -7,49 +7,36 @@ import MovieCard from '../components/MovieCard';
 import TVShowCard from '../components/TVShowCard';
 import Loading from '../components/Loading';
 import ErrorMessage from '../components/ErrorMessage';
+import Pagination from '../components/Pagination';
 
 const movieGenres = [
-  { id: 28, name: 'Action' },
-  { id: 12, name: 'Adventure' },
-  { id: 16, name: 'Animation' },
-  { id: 35, name: 'Comedy' },
-  { id: 80, name: 'Crime' },
-  { id: 99, name: 'Documentary' },
-  { id: 18, name: 'Drama' },
-  { id: 10751, name: 'Family' },
-  { id: 14, name: 'Fantasy' },
-  { id: 36, name: 'History' },
-  { id: 27, name: 'Horror' },
-  { id: 9648, name: 'Mystery' },
-  { id: 878, name: 'Sci-Fi' },
+  { id: 28, name: 'Action' }, { id: 12, name: 'Adventure' }, { id: 16, name: 'Animation' },
+  { id: 35, name: 'Comedy' }, { id: 80, name: 'Crime' }, { id: 99, name: 'Documentary' },
+  { id: 18, name: 'Drama' }, { id: 10751, name: 'Family' }, { id: 14, name: 'Fantasy' },
+  { id: 36, name: 'History' }, { id: 27, name: 'Horror' }, { id: 9648, name: 'Mystery' }, { id: 878, name: 'Sci-Fi' },
 ];
 
 const tvGenres = [
-  { id: 10759, name: 'Action' },
-  { id: 16, name: 'Animation' },
-  { id: 35, name: 'Comedy' },
-  { id: 80, name: 'Crime' },
-  { id: 99, name: 'Documentary' },
-  { id: 18, name: 'Drama' },
-  { id: 10751, name: 'Family' },
-  { id: 10762, name: 'Kids' },
-  { id: 9648, name: 'Mystery' },
-  { id: 10765, name: 'Sci-Fi' },
+  { id: 10759, name: 'Action' }, { id: 16, name: 'Animation' }, { id: 35, name: 'Comedy' },
+  { id: 80, name: 'Crime' }, { id: 99, name: 'Documentary' }, { id: 18, name: 'Drama' },
+  { id: 10751, name: 'Family' }, { id: 10762, name: 'Kids' }, { id: 9648, name: 'Mystery' }, { id: 10765, name: 'Sci-Fi' },
 ];
 
 export default function GenreView() {
   const { mediaType = 'movie', genreId = '28' } = useParams<{ mediaType: 'movie' | 'tv'; genreId: string }>();
   const [activeMedia, setActiveMedia] = useState<'movie' | 'tv'>(mediaType);
   const [activeGenre, setActiveGenre] = useState(Number(genreId));
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     setActiveMedia(mediaType);
     setActiveGenre(Number(genreId));
+    setPage(1);
   }, [mediaType, genreId]);
 
   const { data, loading, error, refetch } = useFetch(
-    () => discoverByGenre(activeMedia, activeGenre),
-    [activeMedia, activeGenre]
+    () => discoverByGenre(activeMedia, activeGenre, page),
+    [activeMedia, activeGenre, page]
   );
 
   const genres = activeMedia === 'movie' ? movieGenres : tvGenres;
@@ -110,15 +97,22 @@ export default function GenreView() {
       {loading && <Loading />}
       {error && <ErrorMessage message={error} onRetry={refetch} />}
       {data && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {data.results.map((item) =>
-            activeMedia === 'movie' && 'title' in item ? (
-              <MovieCard key={item.id} movie={item} />
-            ) : (
-              <TVShowCard key={item.id} show={item as any} />
-            )
-          )}
-        </div>
+        <>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {data.results.map((item) =>
+              activeMedia === 'movie' && 'title' in item ? (
+                <MovieCard key={item.id} movie={item} />
+              ) : (
+                <TVShowCard key={item.id} show={item as any} />
+              )
+            )}
+          </div>
+          <Pagination
+            currentPage={data.page}
+            totalPages={data.total_pages}
+            onPageChange={setPage}
+          />
+        </>
       )}
     </div>
   );

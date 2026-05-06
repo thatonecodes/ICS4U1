@@ -5,6 +5,7 @@ import { searchMulti, searchMovies, searchTV, searchPeople } from '../services/t
 import { getImageUrl } from '../services/tmdbApi';
 import Loading from '../components/Loading';
 import ErrorMessage from '../components/ErrorMessage';
+import Pagination from '../components/Pagination';
 import type { Movie, TVShow, Person } from '../types';
 
 export default function SearchView() {
@@ -14,6 +15,8 @@ export default function SearchView() {
   const [results, setResults] = useState<(Movie | TVShow | Person)[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const typeLabels = {
     multi: 'All',
@@ -21,6 +24,10 @@ export default function SearchView() {
     tv: 'TV Shows',
     person: 'People',
   };
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, type]);
 
   useEffect(() => {
     if (!query) {
@@ -45,24 +52,30 @@ export default function SearchView() {
         searchFn = searchMulti;
     }
 
-    searchFn(query)
+    searchFn(query, page)
       .then((data) => {
         const filtered = type === 'multi'
           ? data.results.filter((item: any) => item.media_type !== 'collection')
           : data.results;
         setResults(filtered);
+        setTotalPages(data.total_pages);
         setLoading(false);
       })
       .catch((err) => {
         setError(err.message || 'Search failed');
         setLoading(false);
       });
-  }, [query, type]);
+  }, [query, type, page]);
 
   const handleTypeChange = (newType: string) => {
     const params = new URLSearchParams(searchParams);
     params.set('type', newType);
     setSearchParams(params);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -182,6 +195,14 @@ export default function SearchView() {
           );
         })}
       </div>
+
+      {results.length > 0 && (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 }

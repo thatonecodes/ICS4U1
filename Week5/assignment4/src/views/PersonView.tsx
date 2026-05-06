@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { FaUser, FaBirthdayCake, FaMapMarkerAlt, FaStar, FaFilm, FaImages, FaBriefcase } from 'react-icons/fa';
+import { FaBirthdayCake, FaMapMarkerAlt, FaStar, FaFilm, FaImages, FaBriefcase } from 'react-icons/fa';
 import { useFetch } from '../hooks/useTMDB';
 import { getPersonDetails, getPersonCredits, getImageUrl } from '../services/tmdbApi';
 import Loading from '../components/Loading';

@@ -4,6 +4,7 @@ import { useFetch } from '../hooks/useTMDB';
 import { getSeasons, getImageUrl } from '../services/tmdbApi';
 import Loading from '../components/Loading';
 import ErrorMessage from '../components/ErrorMessage';
+import type { Season } from '../types';
 
 export default function SeasonsView() {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +29,7 @@ export default function SeasonsView() {
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.seasons.map((season) => (
+        {data.map((season: Season) => (
           <Link
             to={`/tv/${numericId}/seasons/${season.season_number}`}
             key={season.id}

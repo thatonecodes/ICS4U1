@@ -4,6 +4,7 @@ import { useFetch } from '../hooks/useTMDB';
 import { getPersonImages, getImageUrl } from '../services/tmdbApi';
 import Loading from '../components/Loading';
 import ErrorMessage from '../components/ErrorMessage';
+import type { PersonImage } from '../types';
 
 export default function ImagesView() {
   const { id } = useParams<{ id: string }>();
@@ -14,7 +15,7 @@ export default function ImagesView() {
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} onRetry={refetch} />;
 
-  const images = data?.profiles || [];
+  const images = data || [];
 
   return (
     <div>
@@ -32,7 +33,7 @@ export default function ImagesView() {
         <p className="text-gray-400 text-lg">No images available.</p>
       ) : (
         <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-          {images.map((image, index) => (
+          {images.map((image: PersonImage, index: number) => (
             <div key={index} className="break-inside-avoid">
               <img
                 src={getImageUrl(image.file_path, 'w500')}

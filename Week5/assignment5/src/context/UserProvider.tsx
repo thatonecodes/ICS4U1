@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { UserContext } from "./UserContext";
-import type { UserItem, GenrePreferences } from "../types";
-import { useLocalStorage } from "../hooks";
+import { UserContext } from "@/context/UserContext";
+import type { UserItem, GenrePreferences } from "@/types";
+import { useLocalStorage } from "@/hooks";
 
 const USERNAME_KEY = "a5_username";
 const FAVORITES_KEY = "a5_favorites";

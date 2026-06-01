@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { FaSearch, FaFilm, FaTv, FaUser } from 'react-icons/fa';
-import { searchMulti, searchMovies, searchTV, searchPeople } from '../services/tmdbApi';
-import { getImageUrl } from '../services/tmdbApi';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
-import Pagination from '../components/Pagination';
-import type { Movie, TVShow, Person } from '../types';
+import { searchMulti, searchMovies, searchTV, searchPeople } from '@/services/tmdbApi';
+import { getImageUrl } from '@/services/tmdbApi';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
+import Pagination from '@/components/controls/Pagination';
+import type { Movie, TVShow, Person } from '@/types';
 
 export default function SearchView() {
   const [searchParams, setSearchParams] = useSearchParams();

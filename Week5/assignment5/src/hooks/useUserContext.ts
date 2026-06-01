@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UserContext, type UserContextType } from "../context/UserContext";
+import { UserContext, type UserContextType } from "@/context/UserContext";
 
 export const useUserContext = (): UserContextType => {
   const context = useContext(UserContext);

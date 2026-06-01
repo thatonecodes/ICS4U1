@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import { FaFilm, FaTv, FaFire, FaStar, FaArrowRight } from 'react-icons/fa';
-import { useFetch } from '../hooks/useTMDB';
-import { getMovies, getTVShows, getTrending, getImageUrl } from '../services/tmdbApi';
-import MovieCard from '../components/MovieCard';
-import TVShowCard from '../components/TVShowCard';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
+import { useFetch } from '@/hooks/useTMDB';
+import { getMovies, getTVShows, getTrending, getImageUrl } from '@/services/tmdbApi';
+import MovieCard from '@/components/cards/MovieCard';
+import TVShowCard from '@/components/cards/TVShowCard';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
 
 export default function HomeView() {
   const { data: movies, loading: moviesLoading, error: moviesError, refetch: refetchMovies } = useFetch(() => getMovies('now_playing'));

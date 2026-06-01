@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { FaStar, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsCart2, BsCartFill } from 'react-icons/bs';
-import type { Movie } from '../types';
-import { getImageUrl } from '../services/tmdbApi';
-import { useUserContext } from '../hooks';
+import type { Movie } from '@/types';
+import { getImageUrl } from '@/services/tmdbApi';
+import { useUserContext } from '@/hooks';
 
 interface MovieCardProps {
   movie: Movie;

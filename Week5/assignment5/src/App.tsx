@@ -1,24 +1,24 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-import HomeView from './views/HomeView';
-import MoviesView from './views/MoviesView';
-import TelevisionView from './views/TelevisionView';
-import TrendingView from './views/TrendingView';
-import GenreView from './views/GenreView';
-import MovieView from './views/MovieView';
-import CreditsView from './views/CreditsView';
-import TrailersView from './views/TrailersView';
-import ReviewsView from './views/ReviewsView';
-import SeasonsView from './views/SeasonsView';
-import EpisodeView from './views/EpisodeView';
-import PersonView from './views/PersonView';
-import CareerView from './views/CareerView';
-import ImagesView from './views/ImagesView';
-import SearchView from './views/SearchView';
-import CartView from './views/CartView';
-import FavoritesView from './views/FavoritesView';
-import SettingsView from './views/SettingsView';
-import ErrorView from './views/ErrorView';
+import Layout from '@/components/site/Layout';
+import HomeView from '@/views/site/HomeView';
+import MoviesView from '@/views/movies/MoviesView';
+import TelevisionView from '@/views/tv/TelevisionView';
+import TrendingView from '@/views/site/TrendingView';
+import GenreView from '@/views/site/GenreView';
+import MovieView from '@/views/movies/MovieView';
+import CreditsView from '@/views/movies/CreditsView';
+import TrailersView from '@/views/movies/TrailersView';
+import ReviewsView from '@/views/movies/ReviewsView';
+import SeasonsView from '@/views/tv/SeasonsView';
+import EpisodeView from '@/views/tv/EpisodeView';
+import PersonView from '@/views/person/PersonView';
+import CareerView from '@/views/person/CareerView';
+import ImagesView from '@/views/person/ImagesView';
+import SearchView from '@/views/site/SearchView';
+import CartView from '@/views/user/CartView';
+import FavoritesView from '@/views/user/FavoritesView';
+import SettingsView from '@/views/user/SettingsView';
+import ErrorView from '@/views/site/ErrorView';
 
 function App() {
   return (

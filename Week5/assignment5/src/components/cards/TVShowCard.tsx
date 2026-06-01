@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { FaStar, FaHeart, FaRegHeart } from 'react-icons/fa';
-import type { TVShow } from '../types';
-import { getImageUrl } from '../services/tmdbApi';
-import { useUserContext } from '../hooks';
+import type { TVShow } from '@/types';
+import { getImageUrl } from '@/services/tmdbApi';
+import { useUserContext } from '@/hooks';
 
 interface TVShowCardProps {
   show: TVShow;

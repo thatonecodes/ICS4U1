@@ -1,9 +1,9 @@
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { FaVideo, FaArrowLeft } from 'react-icons/fa';
-import { useFetch } from '../hooks/useTMDB';
-import { getVideos } from '../services/tmdbApi';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
+import { useFetch } from '@/hooks/useTMDB';
+import { getVideos } from '@/services/tmdbApi';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
 
 export default function TrailersView() {
   const { id } = useParams<{ id: string }>();

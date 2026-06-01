@@ -1,11 +1,11 @@
 import { useParams, useLocation, Link } from 'react-router-dom';
 import { FaStar, FaCalendar, FaClock, FaGlobe, FaLink, FaList, FaVideo, FaUsers, FaComment, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsCart2, BsCartFill } from 'react-icons/bs';
-import { useFetch } from '../hooks/useTMDB';
-import { getMovieDetails, getTVDetails, getImageUrl, getBackdropUrl } from '../services/tmdbApi';
-import { useUserContext } from '../hooks';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
+import { useFetch } from '@/hooks/useTMDB';
+import { getMovieDetails, getTVDetails, getImageUrl, getBackdropUrl } from '@/services/tmdbApi';
+import { useUserContext } from '@/hooks';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
 
 export default function MovieView() {
   const { id } = useParams<{ id: string }>();

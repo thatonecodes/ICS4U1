@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaThLarge } from 'react-icons/fa';
-import { useFetch } from '../hooks/useTMDB';
-import { discoverByGenre } from '../services/tmdbApi';
-import MovieCard from '../components/MovieCard';
-import TVShowCard from '../components/TVShowCard';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
-import Pagination from '../components/Pagination';
-import type { TVShow } from '../types';
+import { useFetch } from '@/hooks/useTMDB';
+import { discoverByGenre } from '@/services/tmdbApi';
+import MovieCard from '@/components/cards/MovieCard';
+import TVShowCard from '@/components/cards/TVShowCard';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
+import Pagination from '@/components/controls/Pagination';
+import type { TVShow } from '@/types';
 
 const movieGenres = [
   { id: 28, name: 'Action' }, { id: 12, name: 'Adventure' }, { id: 16, name: 'Animation' },

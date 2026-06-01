@@ -3,7 +3,7 @@ import type {
   Movie, TVShow, MediaDetails, Person, PersonDetails,
   Credits, Video, Review, Season, Episode, CareerRole,
   PersonImage, ApiResponse, Genre
-} from '../types';
+} from '@/types';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY || '';
 const BASE_URL = 'https://api.themoviedb.org/3';

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import type { Person } from '../types';
-import { getImageUrl } from '../services/tmdbApi';
+import type { Person } from '@/types';
+import { getImageUrl } from '@/services/tmdbApi';
 
 interface PersonCardProps {
   person: Person;

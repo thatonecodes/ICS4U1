@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { FaFilm, FaTv, FaFire, FaHome, FaThLarge, FaHeart, FaShoppingCart, FaCog } from 'react-icons/fa';
-import { useUserContext } from '../hooks';
-import SearchBar from './SearchBar';
+import { useUserContext } from '@/hooks';
+import SearchBar from '@/components/controls/SearchBar';
 
 export default function Header() {
   const location = useLocation();

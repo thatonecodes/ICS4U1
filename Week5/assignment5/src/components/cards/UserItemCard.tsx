@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
-import type { UserItem } from '../types';
-import { getImageUrl } from '../services/tmdbApi';
-import { calculatePrice, formatPrice } from '../utils/price';
+import type { UserItem } from '@/types';
+import { getImageUrl } from '@/services/tmdbApi';
+import { calculatePrice, formatPrice } from '@/utils/price';
 
 interface UserItemCardProps {
   item: UserItem;

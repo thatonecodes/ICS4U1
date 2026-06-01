@@ -1,7 +1,7 @@
 import { FaShoppingCart } from 'react-icons/fa';
-import { useUserContext } from '../hooks';
-import UserItemCard from '../components/UserItemCard';
-import { calculatePrice, formatPrice } from '../utils/price';
+import { useUserContext } from '@/hooks';
+import UserItemCard from '@/components/cards/UserItemCard';
+import { calculatePrice, formatPrice } from '@/utils/price';
 
 export default function CartView() {
   const { cart, removeCart } = useUserContext();

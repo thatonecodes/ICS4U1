@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { FaFire } from 'react-icons/fa';
-import { useFetch } from '../hooks/useTMDB';
-import { getTrending } from '../services/tmdbApi';
-import MovieCard from '../components/MovieCard';
-import TVShowCard from '../components/TVShowCard';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
-import Pagination from '../components/Pagination';
+import { useFetch } from '@/hooks/useTMDB';
+import { getTrending } from '@/services/tmdbApi';
+import MovieCard from '@/components/cards/MovieCard';
+import TVShowCard from '@/components/cards/TVShowCard';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
+import Pagination from '@/components/controls/Pagination';
 
 export default function TrendingView() {
   const [mediaType, setMediaType] = useState<'movie' | 'tv' | 'all'>('all');

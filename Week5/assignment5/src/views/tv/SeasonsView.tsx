@@ -1,12 +1,12 @@
 import { useParams, Link } from 'react-router-dom';
 import { FaList, FaArrowLeft, FaCalendar, FaFilm } from 'react-icons/fa';
 import { BsCart2 as BsCart2Icon, BsCartFill as BsCartFillIcon } from 'react-icons/bs';
-import { useFetch } from '../hooks/useTMDB';
-import { getSeasons, getImageUrl } from '../services/tmdbApi';
-import { useUserContext } from '../hooks';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
-import type { Season } from '../types';
+import { useFetch } from '@/hooks/useTMDB';
+import { getSeasons, getImageUrl } from '@/services/tmdbApi';
+import { useUserContext } from '@/hooks';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
+import type { Season } from '@/types';
 
 export default function SeasonsView() {
   const { id } = useParams<{ id: string }>();

@@ -1,12 +1,12 @@
 import { useParams, Link } from 'react-router-dom';
 import { FaBirthdayCake, FaMapMarkerAlt, FaStar, FaFilm, FaImages, FaBriefcase } from 'react-icons/fa';
-import { useFetch } from '../hooks/useTMDB';
-import { getPersonDetails, getPersonCredits, getImageUrl } from '../services/tmdbApi';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
-import MovieCard from '../components/MovieCard';
-import TVShowCard from '../components/TVShowCard';
-import type { CareerRole } from '../types';
+import { useFetch } from '@/hooks/useTMDB';
+import { getPersonDetails, getPersonCredits, getImageUrl } from '@/services/tmdbApi';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
+import MovieCard from '@/components/cards/MovieCard';
+import TVShowCard from '@/components/cards/TVShowCard';
+import type { CareerRole } from '@/types';
 
 export default function PersonView() {
   const { id } = useParams<{ id: string }>();
@@ -95,9 +95,9 @@ export default function PersonView() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {knownFor.map((item: CareerRole) =>
               item.media_type === 'movie' ? (
-                <MovieCard key={item.id} movie={item as unknown as import('../types').Movie} />
+                <MovieCard key={item.id} movie={item as unknown as import('@/types').Movie} />
               ) : (
-                <TVShowCard key={item.id} show={item as unknown as import('../types').TVShow} />
+                <TVShowCard key={item.id} show={item as unknown as import('@/types').TVShow} />
               )
             )}
           </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FaCog, FaSave, FaUndo } from 'react-icons/fa';
-import { useUserContext } from '../hooks';
+import { useUserContext } from '@/hooks';
 
 const movieGenres = [
   { id: 28, name: 'Action' }, { id: 12, name: 'Adventure' }, { id: 16, name: 'Animation' },

@@ -1,6 +1,6 @@
 import { FaHeart } from 'react-icons/fa';
-import { useUserContext } from '../hooks';
-import UserItemCard from '../components/UserItemCard';
+import { useUserContext } from '@/hooks';
+import UserItemCard from '@/components/cards/UserItemCard';
 
 export default function FavoritesView() {
   const { favorites, removeFavorite } = useUserContext();

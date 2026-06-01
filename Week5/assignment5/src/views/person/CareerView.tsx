@@ -1,9 +1,9 @@
 import { useParams, Link } from 'react-router-dom';
 import { FaBriefcase, FaArrowLeft, FaStar } from 'react-icons/fa';
-import { useFetch } from '../hooks/useTMDB';
-import { getPersonCredits, getImageUrl } from '../services/tmdbApi';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
+import { useFetch } from '@/hooks/useTMDB';
+import { getPersonCredits, getImageUrl } from '@/services/tmdbApi';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
 
 export default function CareerView() {
   const { id } = useParams<{ id: string }>();

@@ -1,9 +1,9 @@
 import { useParams, Link } from 'react-router-dom';
 import { FaTv, FaArrowLeft, FaStar, FaCalendar } from 'react-icons/fa';
-import { useFetch } from '../hooks/useTMDB';
-import { getSeasonDetails, getImageUrl } from '../services/tmdbApi';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
+import { useFetch } from '@/hooks/useTMDB';
+import { getSeasonDetails, getImageUrl } from '@/services/tmdbApi';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
 
 export default function EpisodeView() {
   const { id, seasonNumber } = useParams<{ id: string; seasonNumber: string }>();

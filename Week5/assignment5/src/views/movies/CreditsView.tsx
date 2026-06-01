@@ -1,9 +1,9 @@
 import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
 import { FaUsers, FaArrowLeft } from 'react-icons/fa';
-import { useFetch } from '../hooks/useTMDB';
-import { getCredits, getImageUrl } from '../services/tmdbApi';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
+import { useFetch } from '@/hooks/useTMDB';
+import { getCredits, getImageUrl } from '@/services/tmdbApi';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
 
 export default function CreditsView() {
   const { id } = useParams<{ id: string }>();

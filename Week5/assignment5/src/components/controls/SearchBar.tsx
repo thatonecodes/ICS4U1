@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FaSearch, FaFilm, FaTv, FaUser } from 'react-icons/fa';
-import { useDebounce } from '../hooks/useDebounce';
+import { useDebounce } from '@/hooks/useDebounce';
 
 type SearchType = 'multi' | 'movie' | 'tv' | 'person';
 

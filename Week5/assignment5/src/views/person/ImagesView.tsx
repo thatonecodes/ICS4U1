@@ -1,10 +1,10 @@
 import { useParams, Link } from 'react-router-dom';
 import { FaImages, FaArrowLeft } from 'react-icons/fa';
-import { useFetch } from '../hooks/useTMDB';
-import { getPersonImages, getImageUrl } from '../services/tmdbApi';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
-import type { PersonImage } from '../types';
+import { useFetch } from '@/hooks/useTMDB';
+import { getPersonImages, getImageUrl } from '@/services/tmdbApi';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
+import type { PersonImage } from '@/types';
 
 export default function ImagesView() {
   const { id } = useParams<{ id: string }>();

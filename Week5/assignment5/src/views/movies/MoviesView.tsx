@@ -1,25 +1,25 @@
 import { useState } from 'react';
-import { FaTv } from 'react-icons/fa';
-import { useFetch } from '../hooks/useTMDB';
-import { getTVShows } from '../services/tmdbApi';
-import TVShowCard from '../components/TVShowCard';
-import Loading from '../components/Loading';
-import ErrorMessage from '../components/ErrorMessage';
-import Pagination from '../components/Pagination';
+import { FaFilm } from 'react-icons/fa';
+import { useFetch } from '@/hooks/useTMDB';
+import { getMovies } from '@/services/tmdbApi';
+import MovieCard from '@/components/cards/MovieCard';
+import Loading from '@/components/feedback/Loading';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
+import Pagination from '@/components/controls/Pagination';
 
 const categories = [
-  { key: 'airing_today', label: 'Airing Today' },
-  { key: 'on_the_air', label: 'On The Air' },
+  { key: 'now_playing', label: 'Now Playing' },
   { key: 'popular', label: 'Popular' },
   { key: 'top_rated', label: 'Top Rated' },
+  { key: 'upcoming', label: 'Upcoming' },
 ];
 
-export default function TelevisionView() {
-  const [activeCategory, setActiveCategory] = useState('airing_today');
+export default function MoviesView() {
+  const [activeCategory, setActiveCategory] = useState('now_playing');
   const [page, setPage] = useState(1);
 
   const { data, loading, error, refetch } = useFetch(
-    () => getTVShows(activeCategory, page),
+    () => getMovies(activeCategory, page),
     [activeCategory, page]
   );
 
@@ -31,7 +31,7 @@ export default function TelevisionView() {
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
-        <FaTv className="text-tmdb-green" /> TV Shows
+        <FaFilm className="text-tmdb-light" /> Movies
       </h1>
 
       <div className="flex flex-wrap gap-2 mb-8">
@@ -55,8 +55,8 @@ export default function TelevisionView() {
       {data && (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {data.results.map((show) => (
-              <TVShowCard key={show.id} show={show} />
+            {data.results.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
             ))}
           </div>
           <Pagination

@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { UserItem, GenrePreferences } from "../types";
+import type { UserItem, GenrePreferences } from "@/types";
 
 export type UserContextType = {
   userName: string;

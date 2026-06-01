@@ -1,2 +1,2 @@
-export * from './UserContext';
-export * from './UserProvider';
+export * from '@/context/UserContext';
+export * from '@/context/UserProvider';

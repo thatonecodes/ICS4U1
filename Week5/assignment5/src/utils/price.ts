@@ -1,5 +1,6 @@
 export const BASE_PRICE = 19.99;
 export const MIN_PRICE = 4.99;
+export const CANADIAN_TAX_RATE = 0.13;
 
 export function calculatePrice(dateString: string): number {
   if (!dateString) return BASE_PRICE;

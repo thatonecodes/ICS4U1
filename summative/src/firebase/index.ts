@@ -2,6 +2,9 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
+// Firebase config is read from VITE_* environment variables.
+// Make sure Firestore security rules allow authenticated users to read/write
+// their own /users/{uid} document. See FIRESTORE_RULES.md in the project root.
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,

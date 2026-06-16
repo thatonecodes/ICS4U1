@@ -8,16 +8,15 @@ import {
   FaHeart,
   FaShoppingCart,
   FaCog,
-  FaUser,
-  FaSignOutAlt,
   FaSignInAlt,
 } from 'react-icons/fa';
 import { useAuth, useUserContext } from '@/hooks';
 import SearchBar from '@/components/controls/SearchBar';
+import UserMenu from '@/components/site/UserMenu';
 
 export default function Header() {
   const location = useLocation();
-  const { currentUser, logout } = useAuth();
+  const { currentUser } = useAuth();
   const { favorites, cart } = useUserContext();
 
   const isActive = (path: string) => location.pathname.startsWith(path);
@@ -28,10 +27,6 @@ export default function Header() {
         ? 'bg-tmdb-light text-white'
         : 'text-gray-300 hover:text-white hover:bg-gray-800'
     }`;
-
-  const handleLogout = async () => {
-    await logout();
-  };
 
   return (
     <header className="bg-tmdb-dark sticky top-0 z-50 shadow-lg">
@@ -102,23 +97,7 @@ export default function Header() {
               )}
 
               {currentUser ? (
-                <button
-                  onClick={handleLogout}
-                  className="ml-2 flex items-center gap-2 text-sm text-gray-400 hover:text-white transition"
-                  title="Sign out"
-                >
-                  {currentUser.photoURL ? (
-                    <img
-                      src={currentUser.photoURL}
-                      alt="Avatar"
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                  ) : (
-                    <FaUser />
-                  )}
-                  <span className="hidden lg:inline">{currentUser.displayName || currentUser.email}</span>
-                  <FaSignOutAlt />
-                </button>
+                <UserMenu />
               ) : (
                 <Link
                   to="/signin"

@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import type { GenrePreferences, Purchase } from '@/types';
 
@@ -29,4 +29,8 @@ export const addPurchase = async (uid: string, purchase: Purchase) => {
   const purchases = data?.purchases ?? [];
   purchases.push(purchase);
   await setDoc(userDocRef(uid), { purchases }, { merge: true });
+};
+
+export const deleteUserData = async (uid: string) => {
+  await deleteDoc(userDocRef(uid));
 };

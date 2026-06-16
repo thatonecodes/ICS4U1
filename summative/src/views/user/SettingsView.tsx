@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaCog, FaSave, FaUndo, FaSignOutAlt, FaUser, FaLock, FaReceipt } from 'react-icons/fa';
-import { updateProfile, updatePassword } from 'firebase/auth';
+import { FaCog, FaSave, FaUndo, FaSignOutAlt, FaUser, FaLock, FaReceipt, FaTrash } from 'react-icons/fa';
+import { updateProfile, updatePassword, deleteUser } from 'firebase/auth';
 import { useAuth, useUserContext } from '@/hooks';
 import { formatPrice } from '@/utils/price';
+import Dialog from '@/components/site/Dialog';
+import { deleteUserData } from '@/services/firestore';
 
 const movieGenres = [
   { id: 28, name: 'Action' }, { id: 12, name: 'Adventure' }, { id: 16, name: 'Animation' },
@@ -47,6 +49,8 @@ export default function SettingsView() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     setPrefs(genrePreferences);
@@ -150,6 +154,27 @@ export default function SettingsView() {
     navigate('/');
   };
 
+  const handleDeleteAccount = async () => {
+    if (!currentUser) return;
+    setDeleting(true);
+    setError('');
+    setMessage('');
+
+    try {
+      await deleteUserData(currentUser.uid);
+      await deleteUser(currentUser);
+      navigate('/');
+    } catch (err) {
+      setDeleting(false);
+      setShowDeleteDialog(false);
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Failed to delete account. You may need to sign in again before deleting.'
+      );
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -172,7 +197,12 @@ export default function SettingsView() {
               : 'bg-green-500/20 text-green-400'
           }`}
         >
-          {error || message}
+          <p>{error || message}</p>
+          {error && error.toLowerCase().includes('permission') && (
+            <p className="text-xs mt-1">
+              Firestore security rules may be blocking this action. Please ask the project owner to allow authenticated users to read/write their own user document.
+            </p>
+          )}
         </div>
       )}
 
@@ -339,6 +369,21 @@ export default function SettingsView() {
           )}
         </div>
 
+        <div className="bg-gray-800 rounded-2xl p-6 space-y-4 border border-red-500/30">
+          <h2 className="font-semibold text-lg flex items-center gap-2 text-red-400">
+            <FaTrash /> Danger Zone
+          </h2>
+          <p className="text-gray-400 text-sm">
+            Permanently delete your account and all associated data. This action cannot be undone.
+          </p>
+          <button
+            onClick={() => setShowDeleteDialog(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition text-sm font-medium"
+          >
+            <FaTrash /> Delete Account
+          </button>
+        </div>
+
         <div className="flex justify-end gap-3">
           <button
             onClick={handleReset}
@@ -358,6 +403,20 @@ export default function SettingsView() {
           </button>
         </div>
       </div>
+
+      <Dialog
+        isOpen={showDeleteDialog}
+        title="Delete Account"
+        confirmText={deleting ? 'Deleting...' : 'Delete Account'}
+        cancelText="Cancel"
+        onConfirm={handleDeleteAccount}
+        onCancel={() => setShowDeleteDialog(false)}
+        confirmDisabled={deleting}
+      >
+        <p className="text-gray-300">
+          Are you sure you want to permanently delete your account? All your favorites, cart, genre preferences, and purchase history will be removed.
+        </p>
+      </Dialog>
     </div>
   );
 }

@@ -186,9 +186,14 @@ export default function CartView() {
           )}
 
           {error && (
-            <p className="text-red-400 text-sm bg-red-500/20 p-2 rounded">
-              {error}
-            </p>
+            <div className="text-red-400 text-sm bg-red-500/20 p-2 rounded space-y-1">
+              <p>{error}</p>
+              {error.toLowerCase().includes('permission') && (
+                <p className="text-xs">
+                  Please ask the project owner to update your Firestore security rules to allow authenticated users to write their own data.
+                </p>
+              )}
+            </div>
           )}
         </div>
       </Dialog>

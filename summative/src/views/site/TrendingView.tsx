@@ -46,7 +46,7 @@ export default function TrendingView() {
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
             >
-              {type === 'all' ? 'All' : type === 'movie' ? 'Movies' : 'TV Shows'}
+              {type === 'all' ? 'All' : type === 'movie' ? 'Movies' : 'TV'}
             </button>
           ))}
         </div>

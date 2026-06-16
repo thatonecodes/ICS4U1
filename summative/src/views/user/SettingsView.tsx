@@ -290,7 +290,7 @@ export default function SettingsView() {
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-gray-300 mb-2">TV Shows</h3>
+            <h3 className="text-sm font-medium text-gray-300 mb-2">TV</h3>
             <div className="flex flex-wrap gap-2">
               {tvGenres.map((genre) => (
                 <button

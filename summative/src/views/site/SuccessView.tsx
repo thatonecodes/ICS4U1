@@ -13,7 +13,7 @@ export default function SuccessView() {
       </p>
       <div className="flex justify-center gap-4">
         <Link
-          to="/"
+          to="/home"
           className="flex items-center gap-2 px-5 py-2.5 bg-gray-800 rounded-lg hover:bg-gray-700 transition font-medium"
         >
           <FaHome /> Home

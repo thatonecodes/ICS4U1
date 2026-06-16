@@ -10,7 +10,7 @@ export default function ErrorView() {
         The page you are looking for does not exist or has been moved.
       </p>
       <Link
-        to="/"
+        to="/home"
         className="flex items-center gap-2 px-6 py-3 bg-tmdb-light text-white rounded-lg hover:bg-blue-600 transition font-semibold"
       >
         <FaHome /> Go Home

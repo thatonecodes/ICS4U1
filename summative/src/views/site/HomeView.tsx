@@ -91,7 +91,7 @@ export default function HomeView() {
       <section>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold flex items-center gap-2">
-            <FaTv className="text-tmdb-green" /> TV Shows Airing Today
+            <FaTv className="text-tmdb-green" /> TV Airing Today
           </h2>
           <Link to="/tv" className="text-tmdb-light hover:underline flex items-center gap-1">
             View All <FaArrowRight />

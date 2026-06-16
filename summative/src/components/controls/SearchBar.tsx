@@ -8,7 +8,7 @@ type SearchType = 'multi' | 'movie' | 'tv' | 'person';
 const searchOptions: { value: SearchType; label: string; icon: React.ReactNode }[] = [
   { value: 'multi', label: 'All', icon: <FaSearch className="text-xs" /> },
   { value: 'movie', label: 'Movies', icon: <FaFilm className="text-xs" /> },
-  { value: 'tv', label: 'TV Shows', icon: <FaTv className="text-xs" /> },
+  { value: 'tv', label: 'TV', icon: <FaTv className="text-xs" /> },
   { value: 'person', label: 'People', icon: <FaUser className="text-xs" /> },
 ];
 

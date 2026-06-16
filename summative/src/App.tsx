@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from '@/components/site/Layout';
 import ProtectedRoute from '@/components/site/ProtectedRoute';
+import HomeGate from '@/components/site/HomeGate';
 import HomeView from '@/views/site/HomeView';
 import MoviesView from '@/views/movies/MoviesView';
 import TelevisionView from '@/views/tv/TelevisionView';
@@ -27,8 +28,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomeView />} />
+        <Route path="/" element={<HomeGate />} />
+        <Route path="/signin" element={<SignInView />} />
+        <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+          <Route path="home" element={<HomeView />} />
           <Route path="movies" element={<MoviesView />} />
           <Route path="movies/:id" element={<MovieView />} />
           <Route path="movies/:id/credits" element={<CreditsView />} />
@@ -47,39 +50,10 @@ function App() {
           <Route path="person/:id/career" element={<CareerView />} />
           <Route path="person/:id/images" element={<ImagesView />} />
           <Route path="search" element={<SearchView />} />
-          <Route path="signin" element={<SignInView />} />
-          <Route
-            path="cart"
-            element={
-              <ProtectedRoute>
-                <CartView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="favorites"
-            element={
-              <ProtectedRoute>
-                <FavoritesView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="settings"
-            element={
-              <ProtectedRoute>
-                <SettingsView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="success"
-            element={
-              <ProtectedRoute>
-                <SuccessView />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="success" element={<SuccessView />} />
+          <Route path="cart" element={<CartView />} />
+          <Route path="favorites" element={<FavoritesView />} />
+          <Route path="settings" element={<SettingsView />} />
           <Route path="*" element={<ErrorView />} />
         </Route>
       </Routes>

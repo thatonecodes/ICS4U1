@@ -23,7 +23,7 @@ export default function SearchView() {
   const typeLabels = {
     multi: 'All',
     movie: 'Movies',
-    tv: 'TV Shows',
+    tv: 'TV',
     person: 'People',
   };
 
@@ -119,7 +119,7 @@ export default function SearchView() {
       {!query && (
         <div className="text-center py-20">
           <FaSearch className="text-6xl text-gray-700 mx-auto mb-4" />
-          <p className="text-xl text-gray-400">Start typing to search movies, TV shows, and people.</p>
+          <p className="text-xl text-gray-400">Start typing to search movies, TV, and people.</p>
         </div>
       )}
 

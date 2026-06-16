@@ -1,11 +1,19 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaShoppingCart, FaCreditCard } from 'react-icons/fa';
+import { FaShoppingCart, FaCreditCard, FaFilm, FaTv } from 'react-icons/fa';
 import { useUserContext } from '@/hooks';
 import UserItemCard from '@/components/cards/UserItemCard';
 import Dialog from '@/components/site/Dialog';
 import { calculatePrice, formatPrice, CANADIAN_TAX_RATE } from '@/utils/price';
-import type { Purchase } from '@/types';
+import type { Purchase, UserItem } from '@/types';
+
+type FilterType = 'all' | 'movie' | 'tv';
+
+const matchesFilter = (item: UserItem, filter: FilterType) => {
+  if (filter === 'all') return true;
+  if (filter === 'movie') return item.mediaType === 'movie';
+  return item.mediaType === 'tv' || item.mediaType === 'season';
+};
 
 export default function CartView() {
   const { cart, removeCart, addPurchase, clearCart } = useUserContext();
@@ -13,11 +21,20 @@ export default function CartView() {
   const [showDialog, setShowDialog] = useState(false);
   const [purchasing, setPurchasing] = useState(false);
   const [error, setError] = useState('');
+  const [filter, setFilter] = useState<FilterType>('all');
 
-  const items = Array.from(cart.values());
-  const subtotal = items.reduce((sum, item) => sum + calculatePrice(item.date), 0);
+  const allItems = Array.from(cart.values());
+  const items = allItems.filter((item) => matchesFilter(item, filter));
+
+  const subtotal = allItems.reduce((sum, item) => sum + calculatePrice(item.date), 0);
   const tax = subtotal * CANADIAN_TAX_RATE;
   const total = subtotal + tax;
+
+  const filters: { key: FilterType; label: string; icon: React.ReactNode }[] = [
+    { key: 'all', label: `All (${allItems.length})`, icon: null },
+    { key: 'movie', label: `Movies (${allItems.filter((i) => i.mediaType === 'movie').length})`, icon: <FaFilm /> },
+    { key: 'tv', label: `TV (${allItems.filter((i) => i.mediaType === 'tv' || i.mediaType === 'season').length})`, icon: <FaTv /> },
+  ];
 
   const handleConfirmPurchase = useCallback(async () => {
     setError('');
@@ -26,7 +43,7 @@ export default function CartView() {
     try {
       const purchase: Purchase = {
         id: `${Date.now()}`,
-        items: items.map((item) => ({ ...item })),
+        items: allItems.map((item) => ({ ...item })),
         subtotal,
         tax,
         total,
@@ -42,7 +59,12 @@ export default function CartView() {
     } finally {
       setPurchasing(false);
     }
-  }, [addPurchase, clearCart, items, navigate, subtotal, tax, total]);
+  }, [addPurchase, clearCart, allItems, navigate, subtotal, tax, total]);
+
+  const groupedItems = {
+    movie: allItems.filter((item) => item.mediaType === 'movie'),
+    tv: allItems.filter((item) => item.mediaType === 'tv' || item.mediaType === 'season'),
+  };
 
   return (
     <div>
@@ -50,8 +72,28 @@ export default function CartView() {
         <FaShoppingCart className="text-tmdb-green" /> Cart
       </h1>
 
-      {items.length === 0 ? (
+      {allItems.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {filters.map(({ key, label, icon }) => (
+            <button
+              key={key}
+              onClick={() => setFilter(key)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition ${
+                filter === key
+                  ? 'bg-tmdb-light text-white'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              }`}
+            >
+              {icon} {label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {allItems.length === 0 ? (
         <p className="text-gray-400 text-lg">Your cart is empty.</p>
+      ) : items.length === 0 ? (
+        <p className="text-gray-400 text-lg">No {filter} items in your cart.</p>
       ) : (
         <div className="space-y-4">
           {items.map((item) => (
@@ -64,7 +106,7 @@ export default function CartView() {
           ))}
           <div className="flex flex-col items-end gap-2 pt-4 border-t border-gray-700">
             <div className="flex justify-end items-center gap-4 w-full">
-              <span className="text-gray-400">{items.length} item(s)</span>
+              <span className="text-gray-400">{allItems.length} item(s)</span>
             </div>
             <div className="flex justify-end items-center gap-4 w-full">
               <span className="text-gray-400">Subtotal:</span>
@@ -105,11 +147,44 @@ export default function CartView() {
         onCancel={() => setShowDialog(false)}
         confirmDisabled={purchasing}
       >
-        <div className="space-y-4">
+        <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
           <p className="text-gray-300">
-            Are you sure you want to purchase {items.length} item(s) for{' '}
+            Are you sure you want to purchase {allItems.length} item(s) for{' '}
             <span className="font-bold text-white">{formatPrice(total)}</span>?
           </p>
+
+          {groupedItems.movie.length > 0 && (
+            <div>
+              <h4 className="text-sm font-semibold text-gray-400 mb-2 flex items-center gap-2">
+                <FaFilm /> Movies ({groupedItems.movie.length})
+              </h4>
+              <ul className="space-y-1 text-sm text-gray-300">
+                {groupedItems.movie.map((item) => (
+                  <li key={item.id} className="flex justify-between">
+                    <span className="truncate">{item.title}</span>
+                    <span className="text-tmdb-green">{formatPrice(calculatePrice(item.date))}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {groupedItems.tv.length > 0 && (
+            <div>
+              <h4 className="text-sm font-semibold text-gray-400 mb-2 flex items-center gap-2">
+                <FaTv /> TV ({groupedItems.tv.length})
+              </h4>
+              <ul className="space-y-1 text-sm text-gray-300">
+                {groupedItems.tv.map((item) => (
+                  <li key={item.id} className="flex justify-between">
+                    <span className="truncate">{item.title}</span>
+                    <span className="text-tmdb-green">{formatPrice(calculatePrice(item.date))}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {error && (
             <p className="text-red-400 text-sm bg-red-500/20 p-2 rounded">
               {error}

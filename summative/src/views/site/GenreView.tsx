@@ -95,7 +95,7 @@ export default function GenreView() {
               : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
           }`}
         >
-          TV Shows
+          TV
         </Link>
       </div>
 
@@ -118,7 +118,7 @@ export default function GenreView() {
       <h2 className="text-xl font-semibold mb-4">
         {selectedGenreNames.length > 0
           ? selectedGenreNames.join(', ')
-          : 'All'} {activeMedia === 'movie' ? 'Movies' : 'TV Shows'}
+          : 'All'} {activeMedia === 'movie' ? 'Movies' : 'TV'}
       </h2>
 
       {loading && <Loading />}

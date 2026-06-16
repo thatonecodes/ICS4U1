@@ -12,7 +12,7 @@ export default function SignInView() {
   const [loading, setLoading] = useState(false);
 
   if (currentUser) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/home" replace />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {

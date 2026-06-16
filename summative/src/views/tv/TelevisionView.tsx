@@ -31,7 +31,7 @@ export default function TelevisionView() {
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
-        <FaTv className="text-tmdb-green" /> TV Shows
+        <FaTv className="text-tmdb-green" /> TV
       </h1>
 
       <div className="flex flex-wrap gap-2 mb-8">

@@ -128,7 +128,7 @@ export default function SettingsView() {
 
     try {
       setGenrePreferences(prefs);
-      await saveGenrePreferences();
+      await saveGenrePreferences(prefs);
       setMessage('Genre preferences saved');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save preferences');
@@ -142,9 +142,10 @@ export default function SettingsView() {
     setPhotoURL(currentUser?.photoURL || avatarOptions[0]);
     setNewPassword('');
     setConfirmPassword('');
-    setPrefs({ movie: [], tv: [] });
-    setGenrePreferences({ movie: [], tv: [] });
-    saveGenrePreferences().catch(() => {});
+    const resetPrefs = { movie: [], tv: [] };
+    setPrefs(resetPrefs);
+    setGenrePreferences(resetPrefs);
+    saveGenrePreferences(resetPrefs).catch(() => {});
     setMessage('');
     setError('');
   };
@@ -392,9 +393,9 @@ export default function SettingsView() {
             <FaUndo /> Reset
           </button>
           <button
-            onClick={() => {
-              handleSaveProfile();
-              handleSavePrefs();
+            onClick={async () => {
+              await handleSaveProfile();
+              await handleSavePrefs();
             }}
             disabled={loading}
             className="flex items-center gap-2 px-4 py-2 bg-tmdb-light text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium disabled:opacity-50"

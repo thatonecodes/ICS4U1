@@ -7,7 +7,7 @@ export type UserContextType = {
   genrePreferences: GenrePreferences;
   purchases: Purchase[];
   setGenrePreferences: (prefs: GenrePreferences) => void;
-  saveGenrePreferences: () => Promise<void>;
+  saveGenrePreferences: (prefs?: GenrePreferences) => Promise<void>;
   toggleFavorite: (item: UserItem) => void;
   toggleCart: (item: UserItem) => void;
   removeFavorite: (id: number) => void;

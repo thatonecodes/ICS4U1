@@ -121,10 +121,14 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     setCart(new Map());
   }, [setCart]);
 
-  const saveGenrePreferences = useCallback(async () => {
-    if (!currentUser) return;
-    await saveGenrePreferencesToFirestore(currentUser.uid, genrePreferences);
-  }, [currentUser, genrePreferences]);
+  const saveGenrePreferences = useCallback(
+    async (preferencesToSave?: GenrePreferences) => {
+      if (!currentUser) return;
+      const preferences = preferencesToSave ?? genrePreferences;
+      await saveGenrePreferencesToFirestore(currentUser.uid, preferences);
+    },
+    [currentUser, genrePreferences]
+  );
 
   const addPurchase = useCallback(async (purchase: Purchase) => {
     if (!currentUser) return;

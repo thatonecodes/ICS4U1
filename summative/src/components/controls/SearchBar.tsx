@@ -38,6 +38,11 @@ export default function SearchBar() {
     }
   };
 
+  const handleTypeChange = (type: SearchType) => {
+    setSearchType(type);
+    setDropdownOpen(false);
+  };
+
   const selectedOption = searchOptions.find((o) => o.value === searchType);
 
   return (
@@ -62,10 +67,7 @@ export default function SearchBar() {
                 <button
                   key={option.value}
                   type="button"
-                  onClick={() => {
-                    setSearchType(option.value);
-                    setDropdownOpen(false);
-                  }}
+                  onClick={() => handleTypeChange(option.value)}
                   className={`flex items-center gap-2 w-full px-3 py-2 text-sm transition ${
                     searchType === option.value
                       ? 'bg-tmdb-light text-white'

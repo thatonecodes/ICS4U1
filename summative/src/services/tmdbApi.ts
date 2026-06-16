@@ -26,12 +26,12 @@ api.interceptors.request.use((config) => {
 });
 
 export const getImageUrl = (path: string | null, size: string = 'w500'): string => {
-  if (!path) return 'https://via.placeholder.com/500x750?text=No+Image';
+  if (!path) return '/placeholder-poster.svg';
   return `${IMAGE_BASE}/${size}${path}`;
 };
 
 export const getBackdropUrl = (path: string | null, size: string = 'original'): string => {
-  if (!path) return 'https://via.placeholder.com/1920x1080?text=No+Backdrop';
+  if (!path) return '/placeholder-backdrop.svg';
   return `${IMAGE_BASE}/${size}${path}`;
 };
 

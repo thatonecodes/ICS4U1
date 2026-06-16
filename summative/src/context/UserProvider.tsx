@@ -1,19 +1,23 @@
 import type { ReactNode } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { UserContext } from "@/context/UserContext";
-import type { UserItem, GenrePreferences } from "@/types";
-import { useLocalStorage } from "@/hooks";
+import type { UserItem, GenrePreferences, Purchase } from "@/types";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useAuth } from "@/hooks/useAuth";
+import { getUserData, saveGenrePreferences as saveGenrePreferencesToFirestore, addPurchase as addPurchaseToFirestore } from "@/services/firestore";
 
-const USERNAME_KEY = "a5_username";
 const FAVORITES_KEY = "a5_favorites";
 const CART_KEY = "a5_cart";
-const GENRES_KEY = "a5_genres";
+
+const defaultPreferences: GenrePreferences = { movie: [], tv: [] };
 
 type UserProviderProps = {
   children: ReactNode;
 };
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-  const [userName, setUserName] = useLocalStorage<string, string>(USERNAME_KEY, "User");
+  const { currentUser } = useAuth();
+
   const [favorites, setFavorites] = useLocalStorage<Map<number, UserItem>, [number, UserItem][]>(
     FAVORITES_KEY,
     new Map(),
@@ -30,10 +34,34 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       serialize: (map) => Array.from(map.entries()),
     }
   );
-  const [genrePreferences, setGenrePreferences] = useLocalStorage<GenrePreferences, GenrePreferences>(
-    GENRES_KEY,
-    { movie: [], tv: [] }
-  );
+
+  const [genrePreferences, setGenrePreferences] = useState<GenrePreferences>(defaultPreferences);
+  const [purchases, setPurchases] = useState<Purchase[]>([]);
+
+  useEffect(() => {
+    if (!currentUser) {
+      setGenrePreferences(defaultPreferences);
+      setPurchases([]);
+      return;
+    }
+
+    let cancelled = false;
+    getUserData(currentUser.uid)
+      .then((data) => {
+        if (cancelled) return;
+        if (data?.genrePreferences) {
+          setGenrePreferences(data.genrePreferences);
+        }
+        if (data?.purchases) {
+          setPurchases(data.purchases);
+        }
+      })
+      .catch((err) => console.error("Failed to load user data:", err));
+
+    return () => {
+      cancelled = true;
+    };
+  }, [currentUser]);
 
   const toggleFavorite = (item: UserItem) => {
     setFavorites((prev) => {
@@ -45,7 +73,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       }
       return cloned;
     });
-    // Mutual exclusivity: remove from cart if present
     setCart((prev) => {
       const cloned = new Map(prev);
       if (cloned.has(item.id)) {
@@ -65,7 +92,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       }
       return cloned;
     });
-    // Mutual exclusivity: remove from favorites if present
     setFavorites((prev) => {
       const cloned = new Map(prev);
       if (cloned.has(item.id)) {
@@ -91,19 +117,36 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     });
   };
 
+  const clearCart = useCallback(() => {
+    setCart(new Map());
+  }, [setCart]);
+
+  const saveGenrePreferences = useCallback(async () => {
+    if (!currentUser) return;
+    await saveGenrePreferencesToFirestore(currentUser.uid, genrePreferences);
+  }, [currentUser, genrePreferences]);
+
+  const addPurchase = useCallback(async (purchase: Purchase) => {
+    if (!currentUser) return;
+    await addPurchaseToFirestore(currentUser.uid, purchase);
+    setPurchases((prev) => [...prev, purchase]);
+  }, [currentUser]);
+
   return (
     <UserContext.Provider
       value={{
-        userName,
         favorites,
         cart,
         genrePreferences,
-        setUserName,
+        purchases,
         setGenrePreferences,
+        saveGenrePreferences,
         toggleFavorite,
         toggleCart,
         removeFavorite,
         removeCart,
+        addPurchase,
+        clearCart,
       }}
     >
       {children}

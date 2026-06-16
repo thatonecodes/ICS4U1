@@ -53,9 +53,9 @@ export const getTrending = (mediaType: 'movie' | 'tv' | 'all', timeWindow: 'day'
 export const getGenres = (mediaType: 'movie' | 'tv') =>
   api.get<{ genres: Genre[] }>(`/genre/${mediaType}/list`).then(r => r.data.genres);
 
-export const discoverByGenre = (mediaType: 'movie' | 'tv', genreId: number, page: number = 1) =>
+export const discoverByGenre = (mediaType: 'movie' | 'tv', genreIds: number[], page: number = 1) =>
   api.get<ApiResponse<Movie | TVShow>>(`/discover/${mediaType}`, {
-    params: { with_genres: genreId, page, sort_by: 'popularity.desc' }
+    params: { with_genres: genreIds.join(','), page, sort_by: 'popularity.desc' }
   }).then(r => r.data);
 
 export const getCredits = (mediaType: 'movie' | 'tv', id: number) =>

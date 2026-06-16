@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FaList, FaArrowLeft, FaCalendar, FaFilm } from 'react-icons/fa';
 import { BsCart2 as BsCart2Icon, BsCartFill as BsCartFillIcon } from 'react-icons/bs';
 import { useFetch } from '@/hooks/useTMDB';
@@ -10,6 +10,7 @@ import type { Season } from '@/types';
 
 export default function SeasonsView() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const numericId = Number(id);
   const { cart, toggleCart } = useUserContext();
 
@@ -21,12 +22,12 @@ export default function SeasonsView() {
 
   return (
     <div>
-      <Link
-        to={`/tv/${numericId}`}
+      <button
+        onClick={() => navigate(-1)}
         className="inline-flex items-center gap-2 text-tmdb-light hover:underline mb-6"
       >
-        <FaArrowLeft /> Back to Show
-      </Link>
+        <FaArrowLeft /> Back
+      </button>
       <h1 className="text-3xl font-bold mb-8 flex items-center gap-3">
         <FaList className="text-tmdb-light" /> Seasons
       </h1>

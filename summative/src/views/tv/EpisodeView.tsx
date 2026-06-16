@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { FaTv, FaArrowLeft, FaStar, FaCalendar } from 'react-icons/fa';
 import { useFetch } from '@/hooks/useTMDB';
 import { getSeasonDetails, getImageUrl } from '@/services/tmdbApi';
@@ -7,6 +7,7 @@ import ErrorMessage from '@/components/feedback/ErrorMessage';
 
 export default function EpisodeView() {
   const { id, seasonNumber } = useParams<{ id: string; seasonNumber: string }>();
+  const navigate = useNavigate();
   const numericId = Number(id);
   const numericSeason = Number(seasonNumber);
 
@@ -21,12 +22,12 @@ export default function EpisodeView() {
 
   return (
     <div>
-      <Link
-        to={`/tv/${numericId}/seasons`}
+      <button
+        onClick={() => navigate(-1)}
         className="inline-flex items-center gap-2 text-tmdb-light hover:underline mb-6"
       >
-        <FaArrowLeft /> Back to Seasons
-      </Link>
+        <FaArrowLeft /> Back
+      </button>
       <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
         <FaTv className="text-tmdb-light" /> {data.name}
       </h1>

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { FaThLarge } from 'react-icons/fa';
 import { useFetch } from '@/hooks/useTMDB';
+import { useUserContext } from '@/hooks';
 import { discoverByGenre } from '@/services/tmdbApi';
 import MovieCard from '@/components/cards/MovieCard';
 import TVShowCard from '@/components/cards/TVShowCard';
@@ -24,22 +25,50 @@ const tvGenres = [
 ];
 
 export default function GenreView() {
-  const { mediaType = 'movie', genreId = '28' } = useParams<{ mediaType: 'movie' | 'tv'; genreId: string }>();
+  const { mediaType = 'movie' } = useParams<{ mediaType: 'movie' | 'tv' }>();
   const activeMedia = mediaType;
-  const activeGenre = Number(genreId);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { genrePreferences } = useUserContext();
+
+  const selectedGenres = useMemo(() => {
+    const raw = searchParams.get('genres');
+    if (raw) {
+      return raw
+        .split(',')
+        .map((id) => Number(id))
+        .filter((id) => !isNaN(id));
+    }
+    return genrePreferences[activeMedia] ?? [];
+  }, [searchParams, activeMedia, genrePreferences]);
+
   const [page, setPage] = useState(1);
 
   useEffect(() => {
     setPage(1);
-  }, [mediaType, genreId]);
+  }, [mediaType, searchParams]);
 
   const { data, loading, error, refetch } = useFetch(
-    () => discoverByGenre(activeMedia, activeGenre, page),
-    [activeMedia, activeGenre, page]
+    () => discoverByGenre(activeMedia, selectedGenres.length > 0 ? selectedGenres : [28], page),
+    [activeMedia, selectedGenres.join(','), page]
   );
 
   const genres = activeMedia === 'movie' ? movieGenres : tvGenres;
-  const currentGenre = genres.find((g) => g.id === activeGenre);
+
+  const toggleGenre = (id: number) => {
+    const updated = selectedGenres.includes(id)
+      ? selectedGenres.filter((g) => g !== id)
+      : [...selectedGenres, id];
+
+    if (updated.length === 0) {
+      setSearchParams({}, { replace: true });
+    } else {
+      setSearchParams({ genres: updated.join(',') }, { replace: true });
+    }
+  };
+
+  const selectedGenreNames = genres
+    .filter((g) => selectedGenres.includes(g.id))
+    .map((g) => g.name);
 
   return (
     <div>
@@ -49,7 +78,7 @@ export default function GenreView() {
 
       <div className="flex gap-2 mb-6">
         <Link
-          to="/genre/movie/28"
+          to="/genre/movie"
           className={`px-4 py-2 rounded-full font-medium transition ${
             activeMedia === 'movie'
               ? 'bg-tmdb-light text-white'
@@ -59,7 +88,7 @@ export default function GenreView() {
           Movies
         </Link>
         <Link
-          to="/genre/tv/10759"
+          to="/genre/tv"
           className={`px-4 py-2 rounded-full font-medium transition ${
             activeMedia === 'tv'
               ? 'bg-tmdb-light text-white'
@@ -72,22 +101,24 @@ export default function GenreView() {
 
       <div className="flex flex-wrap gap-2 mb-8">
         {genres.map((genre) => (
-          <Link
+          <button
             key={genre.id}
-            to={`/genre/${activeMedia}/${genre.id}`}
+            onClick={() => toggleGenre(genre.id)}
             className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
-              activeGenre === genre.id
+              selectedGenres.includes(genre.id)
                 ? 'bg-tmdb-green text-gray-900'
                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
             }`}
           >
             {genre.name}
-          </Link>
+          </button>
         ))}
       </div>
 
       <h2 className="text-xl font-semibold mb-4">
-        {currentGenre?.name} {activeMedia === 'movie' ? 'Movies' : 'TV Shows'}
+        {selectedGenreNames.length > 0
+          ? selectedGenreNames.join(', ')
+          : 'All'} {activeMedia === 'movie' ? 'Movies' : 'TV Shows'}
       </h2>
 
       {loading && <Loading />}

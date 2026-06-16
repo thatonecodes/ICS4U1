@@ -180,3 +180,12 @@ export interface GenrePreferences {
   movie: number[];
   tv: number[];
 }
+
+export interface Purchase {
+  id: string;
+  items: UserItem[];
+  subtotal: number;
+  tax: number;
+  total: number;
+  createdAt: number;
+}

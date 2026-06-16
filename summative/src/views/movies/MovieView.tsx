@@ -1,5 +1,5 @@
-import { useParams, useLocation, Link } from 'react-router-dom';
-import { FaStar, FaCalendar, FaClock, FaGlobe, FaLink, FaList, FaVideo, FaUsers, FaComment, FaHeart, FaRegHeart } from 'react-icons/fa';
+import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
+import { FaStar, FaCalendar, FaClock, FaGlobe, FaLink, FaList, FaVideo, FaUsers, FaComment, FaHeart, FaRegHeart, FaArrowLeft } from 'react-icons/fa';
 import { BsCart2, BsCartFill } from 'react-icons/bs';
 import { useFetch } from '@/hooks/useTMDB';
 import { getMovieDetails, getTVDetails, getImageUrl, getBackdropUrl } from '@/services/tmdbApi';
@@ -10,6 +10,7 @@ import ErrorMessage from '@/components/feedback/ErrorMessage';
 export default function MovieView() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
   const mediaType = location.pathname.startsWith('/tv') ? 'tv' : 'movie';
   const mediaPath = location.pathname.startsWith('/tv') ? 'tv' : 'movies';
   const numericId = Number(id);
@@ -40,6 +41,13 @@ export default function MovieView() {
 
   return (
     <div className="space-y-8">
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-gray-400 hover:text-white transition"
+      >
+        <FaArrowLeft /> Back
+      </button>
+
       <div className="relative rounded-2xl overflow-hidden">
         <div className="h-[300px] md:h-[400px]">
           <img
@@ -105,7 +113,7 @@ export default function MovieView() {
             {data.genres.map((genre) => (
               <Link
                 key={genre.id}
-                to={`/genre/${mediaType}/${genre.id}`}
+                to={`/genre/${mediaType}?genres=${genre.id}`}
                 className="px-3 py-1 bg-gray-800 rounded-full text-sm hover:bg-tmdb-light transition"
               >
                 {genre.name}

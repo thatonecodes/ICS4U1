@@ -1,6 +1,9 @@
-import { useState } from 'react';
-import { FaCog, FaSave, FaUndo } from 'react-icons/fa';
-import { useUserContext } from '@/hooks';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaCog, FaSave, FaUndo, FaSignOutAlt, FaUser, FaLock, FaReceipt } from 'react-icons/fa';
+import { updateProfile, updatePassword } from 'firebase/auth';
+import { useAuth, useUserContext } from '@/hooks';
+import { formatPrice } from '@/utils/price';
 
 const movieGenres = [
   { id: 28, name: 'Action' }, { id: 12, name: 'Adventure' }, { id: 16, name: 'Animation' },
@@ -17,11 +20,46 @@ const tvGenres = [
   { id: 10765, name: 'Sci-Fi' },
 ];
 
+const avatarOptions = [
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Bob',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Dora',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Elmo',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Gina',
+];
+
 export default function SettingsView() {
-  const { userName, setUserName, genrePreferences, setGenrePreferences } = useUserContext();
-  const [nameValue, setNameValue] = useState(userName);
-  const [nameError, setNameError] = useState('');
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+  const {
+    genrePreferences,
+    setGenrePreferences,
+    saveGenrePreferences,
+    purchases,
+  } = useUserContext();
+
+  const [displayName, setDisplayName] = useState(currentUser?.displayName || '');
+  const [photoURL, setPhotoURL] = useState(currentUser?.photoURL || avatarOptions[0]);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [prefs, setPrefs] = useState(genrePreferences);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setPrefs(genrePreferences);
+  }, [genrePreferences]);
+
+  useEffect(() => {
+    if (currentUser) {
+      setDisplayName(currentUser.displayName || '');
+      setPhotoURL(currentUser.photoURL || avatarOptions[0]);
+    }
+  }, [currentUser]);
+
+  const isEmailUser = currentUser?.providerData[0]?.providerId === 'password';
 
   const toggleGenre = (media: 'movie' | 'tv', id: number) => {
     setPrefs((prev) => {
@@ -33,58 +71,200 @@ export default function SettingsView() {
     });
   };
 
-  const handleSaveName = () => {
-    const trimmed = nameValue.trim();
-    if (!trimmed) {
-      setNameError('Username cannot be empty');
-      return;
+  const handleSaveProfile = async () => {
+    if (!currentUser) return;
+    setError('');
+    setMessage('');
+    setLoading(true);
+
+    try {
+      await updateProfile(currentUser, {
+        displayName: displayName.trim() || currentUser.displayName,
+        photoURL,
+      });
+      setMessage('Profile updated successfully');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update profile');
+    } finally {
+      setLoading(false);
     }
-    setUserName(trimmed);
-    setNameError('');
   };
 
-  const handleSavePrefs = () => {
-    setGenrePreferences(prefs);
+  const handleSavePassword = async () => {
+    if (!currentUser || !isEmailUser) return;
+    setError('');
+    setMessage('');
+
+    if (newPassword.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await updatePassword(currentUser, newPassword);
+      setNewPassword('');
+      setConfirmPassword('');
+      setMessage('Password updated successfully');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update password');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSavePrefs = async () => {
+    setError('');
+    setMessage('');
+    setLoading(true);
+
+    try {
+      setGenrePreferences(prefs);
+      await saveGenrePreferences();
+      setMessage('Genre preferences saved');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save preferences');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
-    setNameValue('User');
-    setNameError('');
+    setDisplayName(currentUser?.displayName || '');
+    setPhotoURL(currentUser?.photoURL || avatarOptions[0]);
+    setNewPassword('');
+    setConfirmPassword('');
     setPrefs({ movie: [], tv: [] });
-
-    setUserName('User');
     setGenrePreferences({ movie: [], tv: [] });
+    saveGenrePreferences().catch(() => {});
+    setMessage('');
+    setError('');
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
   };
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold flex items-center gap-3">
-        <FaCog className="text-tmdb-light" /> Settings
-      </h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold flex items-center gap-3">
+          <FaCog className="text-tmdb-light" /> Settings
+        </h1>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition text-sm font-medium"
+        >
+          <FaSignOutAlt /> Sign Out
+        </button>
+      </div>
 
-      <div className="max-w-2xl space-y-6">
-        <div className="bg-gray-800 rounded-2xl p-6 space-y-4">
+      {(message || error) && (
+        <div
+          className={`p-3 rounded-lg text-sm ${
+            error
+              ? 'bg-red-500/20 text-red-400'
+              : 'bg-green-500/20 text-green-400'
+          }`}
+        >
+          {error || message}
+        </div>
+      )}
+
+      <div className="max-w-3xl space-y-6">
+        <div className="bg-gray-800 rounded-2xl p-6 space-y-6">
           <div>
-            <h2 className="font-semibold text-lg">Profile</h2>
-            <p className="text-gray-400 text-sm">Update your display name</p>
+            <h2 className="font-semibold text-lg flex items-center gap-2">
+              <FaUser /> Profile
+            </h2>
+            <p className="text-gray-400 text-sm">Update your display name and avatar</p>
           </div>
+
           <div className="space-y-2">
-            <label className="text-gray-300 text-sm">Username</label>
+            <label className="text-gray-300 text-sm">Display Name</label>
             <input
               className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tmdb-light transition"
-              onChange={(e) => {
-                setNameValue(e.target.value);
-                setNameError('');
-              }}
+              onChange={(e) => setDisplayName(e.target.value)}
               placeholder="Enter your name"
               type="text"
-              value={nameValue}
+              value={displayName}
             />
-            {nameError && <p className="text-red-400 text-sm">{nameError}</p>}
           </div>
+
+          <div className="space-y-2">
+            <label className="text-gray-300 text-sm">Avatar</label>
+            <div className="flex flex-wrap gap-3">
+              {avatarOptions.map((url) => (
+                <button
+                  key={url}
+                  onClick={() => setPhotoURL(url)}
+                  className={`rounded-full overflow-hidden border-2 transition ${
+                    photoURL === url ? 'border-tmdb-light' : 'border-transparent hover:border-gray-500'
+                  }`}
+                >
+                  <img src={url} alt="Avatar option" className="w-12 h-12" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button
+            onClick={handleSaveProfile}
+            disabled={loading}
+            className="flex items-center gap-2 px-4 py-2 bg-tmdb-light text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium disabled:opacity-50"
+          >
+            <FaSave /> Save Profile
+          </button>
         </div>
 
-        <div className="bg-gray-800 rounded-2xl p-6 space-y-4">
+        {isEmailUser && (
+          <div className="bg-gray-800 rounded-2xl p-6 space-y-6">
+            <div>
+              <h2 className="font-semibold text-lg flex items-center gap-2">
+                <FaLock /> Password
+              </h2>
+              <p className="text-gray-400 text-sm">Change your password</p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-gray-300 text-sm">New Password</label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tmdb-light transition"
+                  placeholder="••••••••"
+                />
+              </div>
+              <div>
+                <label className="text-gray-300 text-sm">Confirm Password</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tmdb-light transition"
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={handleSavePassword}
+              disabled={loading}
+              className="flex items-center gap-2 px-4 py-2 bg-tmdb-light text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium disabled:opacity-50"
+            >
+              <FaSave /> Update Password
+            </button>
+          </div>
+        )}
+
+        <div className="bg-gray-800 rounded-2xl p-6 space-y-6">
           <div>
             <h2 className="font-semibold text-lg">Genre Preferences</h2>
             <p className="text-gray-400 text-sm">Select your favorite genres for recommendations</p>
@@ -129,6 +309,36 @@ export default function SettingsView() {
           </div>
         </div>
 
+        <div className="bg-gray-800 rounded-2xl p-6 space-y-4">
+          <h2 className="font-semibold text-lg flex items-center gap-2">
+            <FaReceipt /> Purchases
+          </h2>
+          {purchases.length === 0 ? (
+            <p className="text-gray-400 text-sm">No purchases yet.</p>
+          ) : (
+            <div className="space-y-3">
+              {purchases.map((purchase) => (
+                <div
+                  key={purchase.id}
+                  className="bg-gray-900 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                >
+                  <div>
+                    <p className="font-medium">
+                      {purchase.items.length} item(s)
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(purchase.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                  <span className="font-bold text-tmdb-green">
+                    {formatPrice(purchase.total)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <div className="flex justify-end gap-3">
           <button
             onClick={handleReset}
@@ -138,10 +348,11 @@ export default function SettingsView() {
           </button>
           <button
             onClick={() => {
-              handleSaveName();
+              handleSaveProfile();
               handleSavePrefs();
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-tmdb-light text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium"
+            disabled={loading}
+            className="flex items-center gap-2 px-4 py-2 bg-tmdb-light text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium disabled:opacity-50"
           >
             <FaSave /> Save
           </button>
